@@ -1,0 +1,22 @@
+.hat_text
+{position: absolute;
+top: 0px; left: 45px;
+font-size: 40px;
+background-color: black}
+
+.hat_img
+{position: absolute;
+top: 0px; left: 0px;}
+head
+{display: inline-block;
+background-size: 100%;
+background-color: black}
+
+.btn-secondary
+{top: 0px}
+
+.navbar
+
+body
+{background-image: url(../img/wood2.jpg);
+background-size: 100%}

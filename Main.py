@@ -3,6 +3,10 @@ from data import db_session
 from data.users import User
 from data.RegisterForm import RegisterForm
 from data.LoginForm import LoginForm
+from data.products import Product
+from data.carts import Cart
+from data.cart_product import Cart_Product
+from data.product_photo import Product_Photo
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import datetime
 
@@ -15,16 +19,18 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 def main():
-    db_session.global_init("db/blog.db")
+    db_session.global_init("db/shop.db")
     #app.run()
     session = db_session.create_session()
 
     @app.route("/")
     def index():
         session = db_session.create_session()
-        jobs = session.query(Jobs)
+        products = session.query(Product)
         users = session.query(User)
-        return render_template("index.html", jobs=jobs, users=users)
+        carts = session.query(Cart)
+        product_photo = session.query(Product_Photo)
+        return render_template("index.html", products=products, users=users, product_photo=product_photo, carts=carts)
 
     @app.route("/all_departments")
     def index_dep():
