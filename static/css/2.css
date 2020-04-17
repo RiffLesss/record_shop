@@ -1,7 +1,7 @@
 .hat_text
 {position: absolute;
-top: 0px; left: 45px;
-font-size: 40px;
+top: 0px; left: 48px;
+font-size: 32px;
 background-color: black}
 
 .hat_img
@@ -12,10 +12,14 @@ head
 background-size: 100%;
 background-color: black}
 
-.btn-secondary
-{top: 0px}
+.enter-buttons
+{position: absolute;
+right: 0px; top: 5px}
 
-.navbar
+.navbar-dark
+{background-color: black;
+position: absolute;
+top: 0px}
 
 body
 {background-image: url(../img/wood2.jpg);

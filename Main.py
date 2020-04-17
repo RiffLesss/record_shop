@@ -19,7 +19,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 def main():
-    db_session.global_init("db/shop.db")
+    db_session.global_init("db/shops.db")
     #app.run()
     session = db_session.create_session()
 
@@ -32,13 +32,6 @@ def main():
         product_photo = session.query(Product_Photo)
         return render_template("index.html", products=products, users=users, product_photo=product_photo, carts=carts)
 
-    @app.route("/all_departments")
-    def index_dep():
-        session = db_session.create_session()
-        jobs = session.query(Jobs)
-        users = session.query(User)
-        departments = session.query(Departments)
-        return render_template("index_dep.html", jobs=jobs, users=users, departments=departments)
 
     @app.route('/register', methods=['GET', 'POST'])
     def reqister():

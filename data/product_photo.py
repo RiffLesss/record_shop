@@ -5,7 +5,7 @@ from .db_session import SqlAlchemyBase
 
 
 class Product_Photo(SqlAlchemyBase, SerializerMixin):
-    __tablename__ = 'carts'
+    __tablename__ = 'product_photo'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)

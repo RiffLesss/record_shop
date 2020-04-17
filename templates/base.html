@@ -13,16 +13,16 @@
 <body>
 <header>
     <nav class="navbar navbar-dark bg-dark">
-        <img class="hat_img" height="46" width="46" align="top" src="../static/img/rockwood.jpg">
+        <img class="hat_img" height="48" width="48" align="top" src="../static/img/rockwood.jpg">
         <font class="hat_text" href="/" color="white" face="Arial">Record Shop</font>
         {% if current_user.is_authenticated %}
-    <a class="navbar-brand" href="/logout">{{ current_user.name }} {{ current_user.surname }}</a>
-{% else %}
-    <p>
-        <a class="btn btn-secondary" href="/register">Зарегистрироваться</a>
-        <a class="btn btn-secondary" href="/login">Войти</a>
-    </p>
-{% endif %}
+        <a class="navbar-brand" href="/logout">{{ current_user.name }} {{ current_user.surname }}</a>
+        {% else %}
+        <p class="enter-buttons">
+            <a class="btn btn-secondary" href="/register">Зарегистрироваться</a>
+            <a class="btn btn-secondary" href="/login">Войти</a>
+        </p>
+        {% endif %}
     </nav>
 </header>
     <main role="main" class="container">
