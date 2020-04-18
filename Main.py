@@ -21,7 +21,6 @@ login_manager.init_app(app)
 
 def main():
     db_session.global_init("db/shops.db")
-    #app.run()
     session = db_session.create_session()
 
     @app.route("/")
