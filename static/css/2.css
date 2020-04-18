@@ -1,25 +1,9 @@
-.hat_text
-{position: absolute;
-top: 0px; left: 48px;
-font-size: 32px;
-background-color: black}
-
-.hat_img
-{position: absolute;
-top: 0px; left: 0px;}
-head
-{display: inline-block;
-background-size: 100%;
-background-color: black}
-
-.enter-buttons
-{position: absolute;
-right: 0px; top: 5px}
-
-.navbar-dark
+#navbarSupportedContent
 {background-color: black;
-position: absolute;
-top: 0px}
+wight: 100%}
+
+#Log
+{padding: 5px}
 
 body
 {background-image: url(../img/wood2.jpg);
