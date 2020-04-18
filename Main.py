@@ -18,6 +18,7 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
 def main():
     db_session.global_init("db/shops.db")
     #app.run()
@@ -31,7 +32,6 @@ def main():
         carts = session.query(Cart)
         product_photo = session.query(Product_Photo)
         return render_template("index.html", products=products, users=users, product_photo=product_photo, carts=carts)
-
 
     @app.route('/register', methods=['GET', 'POST'])
     def reqister():
