@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <link rel="stylesheet" type="text/css" href="/static/css/4.css" >
-{% for item in jobs%}
+{% for item in products%}
 <div class="product-item">
     <p>{{ item.name }}</p>
     <p>{{ item.musician_name }}</p>
@@ -10,7 +10,7 @@
 </div>
 {% if current_user.is_authenticated and (current_user == item.user or current_user.id == 1) %}
     <div>
-        <a href="/cart/{{ item. }}" class="btn btn-warning">Добавить в корзину</a>
+        <a href="/cart/" class="btn btn-warning">Добавить в корзину</a>
         <a href="/jobs_delete/{{ item.id }}" class="btn btn-danger">Купить</a>
     </div>
 {% endif %}

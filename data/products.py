@@ -13,5 +13,5 @@ class Product(SqlAlchemyBase, SerializerMixin):
     price = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     musician = orm.relation('Musician')
 
-    cart_product = orm.relation("Carts_Product", back_populates='product')
+    cart_product = orm.relation("Cart_Product", back_populates='product')
     product_photo = orm.relation("Product_Photo", back_populates='product_photo')
