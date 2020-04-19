@@ -12,3 +12,4 @@ class Cart(SqlAlchemyBase, SerializerMixin):
     user_id = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("users.id"))
     user = orm.relation('User')
+    cart_product = orm.relation('Cart_Product', back_populates='cart')

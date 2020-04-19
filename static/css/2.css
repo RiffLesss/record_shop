@@ -1,10 +1,11 @@
-#navbarSupportedContent
-{background-color: black;
-wight: 100%}
-
-#Log
-{padding: 5px}
-
-body
-{background-image: url(../img/wood2.jpg);
-background-size: 100%}
+#navbarSupportedContent {
+    background-color: black;
+    wight: 100%
+}
+#Log {
+    padding: 5px
+}
+body {
+    background-image: url(../img/wood2.jpg);
+    background-size: 100%
+}
