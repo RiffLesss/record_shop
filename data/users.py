@@ -6,6 +6,7 @@ from .db_session import SqlAlchemyBase
 import sqlalchemy.orm as orm
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
@@ -15,6 +16,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     email = sqlalchemy.Column(sqlalchemy.String,
                               index=True, unique=True, nullable=True)
+    dark_theme = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True, default=False)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)
@@ -28,6 +30,3 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
-
-
-
