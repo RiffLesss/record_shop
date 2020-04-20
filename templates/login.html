@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Авторизация</h1>
+<link rel="stylesheet" type="text/css" href="../static/css/login.css">
+<div class="log_in_div">
+    <p><br></p>
+    <h1>Authorization</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        <p>
+        <p class="text">
             {{ form.email.label }}<br>
             {{ form.email(class="form-control", type="email") }}<br>
             {% for error in form.email.errors %}
@@ -13,7 +16,7 @@
                 </div>
             {% endfor %}
         </p>
-        <p>
+        <p class="text">
             {{ form.password.label }}<br>
             {{ form.password(class="form-control", type="password") }}<br>
             {% for error in form.password.errors %}
@@ -22,8 +25,10 @@
                 </div>
             {% endfor %}
         </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <p class="remember_me_flag">{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p><br></p>
+        <p class="log_in_btn">{{ form.submit(type="submit", class="btn btn-warning") }}<br></p>
         <div>{{ message }}</div>
     </form>
+</div>
 {% endblock %}

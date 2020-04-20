@@ -21,7 +21,6 @@ login_manager.init_app(app)
 
 def main():
     db_session.global_init("db/shop.db")
-    #app.run()
     session = db_session.create_session()
 
     @app.route("/")
@@ -38,28 +37,24 @@ def main():
         form = RegisterForm()
         if form.validate_on_submit():
             if form.password.data != form.password_again.data:
-                return render_template('register.html', title='Регистрация',
+                return render_template('register.html', title='Registration',
                                        form=form,
-                                       message="Пароли не совпадают")
+                                       message="Passwords don't match")
             session = db_session.create_session()
             if session.query(User).filter(User.email == form.email.data).first():
-                return render_template('register.html', title='Регистрация',
+                return render_template('register.html', title='Registration',
                                        form=form,
-                                       message="Такой пользователь уже есть")
+                                       message="This user already exists")
             user = User(
                 name=form.name.data,
                 surname=form.surname.data,
-                age=form.age.data,
                 email=form.email.data,
-                address=form.address.data,
-                position=form.position.data,
-                speciality=form.speciality.data
             )
             user.set_password(form.password.data)
             session.add(user)
             session.commit()
             return redirect('/login')
-        return render_template('register.html', title='Регистрация', form=form)
+        return render_template('register.html', title='Registration', form=form)
 
     @app.route("/cookie_test")
     def cookie_test():
@@ -90,9 +85,9 @@ def main():
                 login_user(user, remember=form.remember_me.data)
                 return redirect("/")
             return render_template('login.html',
-                                   message="Неправильный логин или пароль",
+                                   message="Wrong email or password",
                                    form=form)
-        return render_template('login.html', title='Авторизация', form=form)
+        return render_template('login.html', title='Authorization', form=form)
 
     @app.route('/logout')
     @login_required
