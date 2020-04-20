@@ -1,0 +1,34 @@
+.log_in_div {
+background: black;
+position: relative;
+top: 100px;
+border-radius: 50px;
+border:4px solid #ffbf00
+}
+
+h1 {
+color: #ffbf00;
+text-align: center;
+}
+
+.text {
+color: white;
+width: 80%;
+margin-left: 110px;
+}
+
+.form-control {
+background-color: #333333;
+color: #ffbf00;
+}
+
+.log_in_btn {
+margin-left: 110px;
+position: relative;
+bottom: 20px;
+}
+
+.remember_me_flag {
+margin-left: 110px;
+color: white;
+}

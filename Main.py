@@ -27,10 +27,7 @@ def main():
     def index():
         session = db_session.create_session()
         products = session.query(Product)
-        users = session.query(User)
-        carts = session.query(Cart)
-        product_photo = session.query(Product_Photo)
-        return render_template("index.html", products=products, users=users, product_photo=product_photo, carts=carts)
+        return render_template("index.html", products=products)
 
     @app.route('/register', methods=['GET', 'POST'])
     def reqister():
