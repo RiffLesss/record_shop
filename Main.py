@@ -106,10 +106,11 @@ def main():
         session.commit()
         return redirect("/")
 
-    @app.route('/product/int:id')
+    @app.route('/product/<int:id>')
     def product_page(id):
-        product = session.query(Product).filter(Product.id == id)
-        return render_template("product.html", product=product)
+        product = session.query(Product).filter(Product.id == id).first()
+        if not product.is_lp:
+            return render_template("single.html", product=product)
 
     app.run()
 

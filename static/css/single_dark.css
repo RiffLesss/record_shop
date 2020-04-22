@@ -1,0 +1,93 @@
+.product_div {
+width: 125%;
+margin-top: 100px;
+}
+
+.img_div {
+float: left;
+width: 500px;
+height: 500px;
+margin-right: 30px;
+}
+
+.info_div {
+float: left;
+width: 300px;
+height: 200px;
+margin-right: 30px;
+border:1px solid #f5f5f5;
+border-radius: 8px;
+background-color: #282828;
+}
+
+.price_div {
+float: left;
+width: 300px;
+height: 200px;
+border:1px solid #f5f5f5;
+border-radius: 8px;
+background-color: #282828;
+}
+
+.description_div {
+float: left;
+width: 630px;
+height: 270px;
+margin-top: 30px;
+border:1px solid #f5f5f5;
+border-radius: 8px;
+background-color: #282828;
+}
+
+.name_text {
+text-align: center;
+position: relative;
+top: 10px;
+color: #f5f5f5;
+font-size: 40px;
+}
+
+.add_button_div {
+float: left;
+position: relative;
+left: 25px;
+}
+
+.buy_button_div {
+float: left;
+position: relative;
+left: 30px;
+}
+
+.musician_text {
+text-align: center;
+position: relative;
+top: 0px;
+color: #f5f5f5;
+font-size: 30px;
+}
+
+.year_text {
+text-align: center;
+color: #f5f5f5;
+font-size: 20px;
+}
+
+.price_text {
+text-align: center;
+color: #f5f5f5;
+font-size: 70px;
+}
+
+h3 {
+color: #f5f5f5;
+margin-top: 10px;
+margin-left: 30px;
+}
+
+.description_text {
+color: #f5f5f5;
+margin-top: 15px;
+margin-left: 30px;
+margin-right: 30px;
+}

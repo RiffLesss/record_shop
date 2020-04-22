@@ -1,6 +1,6 @@
 .product-item {
     display: inline-block;
-	border: 1px solid white;
+	border: 1px solid #f5f5f5;
 	border-radius: 8px;
 	position: relative;
 	right: 0px;
@@ -21,21 +21,21 @@
 }
 
 .item-name {
-    color: white;
+    color: #f5f5f5;
     font-size: 30px;
     position: relative;
     top: 5px;
 }
 
 .item-musician {
-    color: white;
+    color: #f5f5f5;
     font-size: 25px;
     position: relative;
     top: -15px;
 }
 
 .item-price {
-    color: white;
+    color: #f5f5f5;
     font-size: 40px;
     position: relative;
     top: -47px;
