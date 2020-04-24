@@ -28,7 +28,22 @@ def main():
     def index():
         session = db_session.create_session()
         products = session.query(Product)
-        return render_template("index.html", products=products)
+        product_photo = session.query(Product_Photo)
+        return render_template("index.html", products=products, product_photo=product_photo)
+
+    @app.route("/TopSingles")
+    def singles():
+        session = db_session.create_session()
+        products = session.query(Product).filter(Product.is_lp == False)
+        product_photo = session.query(Product_Photo)
+        return render_template("index.html", products=products, product_photo=product_photo)
+
+    @app.route("/TopAlbums")
+    def albums():
+        session = db_session.create_session()
+        products = session.query(Product).filter(Product.is_lp == True)
+        product_photo = session.query(Product_Photo)
+        return render_template("index.html", products=products, product_photo=product_photo)
 
     @app.route('/register', methods=['GET', 'POST'])
     def reqister():
@@ -49,7 +64,9 @@ def main():
                 email=form.email.data,
             )
             user.set_password(form.password.data)
+            user_cart = Cart(user_id=user.id)
             session.add(user)
+            session.add(user_cart)
             session.commit()
             return redirect('/login')
         return render_template('register.html', title='Registration', form=form)
@@ -67,6 +84,12 @@ def main():
             res.set_cookie("visits_count", '1',
                            max_age=60 * 60 * 24 * 365 * 2)
         return res
+
+    @app.route('/cart')
+    def cart():
+        cart = session.query(Cart).get(current_user.id)
+        cart_products = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id)
+        return render_template('cart.html', title='Cart', cart_products=cart_products)
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -105,6 +128,19 @@ def main():
                                                                           synchronize_session=False)
         session.commit()
         return redirect("/")
+
+    @app.route("/count+/<int:id>")
+    def plus_count(id):
+        session.query(Cart_Product).filter(Cart_Product.id == id).update({Cart_Product.count: Cart_Product.count + 1})
+        return redirect("/cart")
+
+    @app.route("/count-/<int:id>")
+    def minus_count(id):
+        count = session.query(Cart_Product).get(id)
+        if count.count > 1:
+            session.query(Cart_Product).filter(Cart_Product.id == id).update({Cart_Product.count: Cart_Product.count - 1})
+        return redirect("/cart")
+
 
     app.run()
 

@@ -10,6 +10,6 @@ class Cart_Product(SqlAlchemyBase, SerializerMixin):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     product_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("products.id"))
     cart_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("carts.id"))
-
+    count = sqlalchemy.Column(sqlalchemy.Integer, default=1, nullable=True)
     cart = orm.relation('Cart')
     product = orm.relation('Product')

@@ -10,5 +10,4 @@ class Product_Photo(SqlAlchemyBase, SerializerMixin):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     product_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("products.id"))
     url = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-
     product = orm.relation('Product')
