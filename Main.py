@@ -4,6 +4,7 @@ from data.users import User
 from data.RegisterForm import RegisterForm
 from data.LoginForm import LoginForm
 from data.products import Product
+from data.songs import Song
 from data.carts import Cart
 from data.cart_product import Cart_Product
 from data.product_photo import Product_Photo
@@ -109,8 +110,11 @@ def main():
     @app.route('/product/<int:id>')
     def product_page(id):
         product = session.query(Product).filter(Product.id == id).first()
-        if not product.is_lp:
+        if product.is_lp == 0:
             return render_template("single.html", product=product)
+        else:
+            songs = session.query(Song).filter(Song.album_id == product.id)
+            return render_template("album.html", product=product, songs=songs)
 
     app.run()
 

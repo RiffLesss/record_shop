@@ -10,11 +10,22 @@ height: 500px;
 margin-right: 30px;
 }
 
+.songs_div {
+float: left;
+width: 300px;
+height: 500px;
+margin-right: 30px;
+border:1px solid #f5f5f5;
+border-radius: 8px;
+background-color: #282828;
+}
+
 .info_div {
 float: left;
 width: 300px;
-height: 200px;
+height: 235px;
 margin-right: 30px;
+margin-bottom: 30px;
 border:1px solid #f5f5f5;
 border-radius: 8px;
 background-color: #282828;
@@ -23,7 +34,7 @@ background-color: #282828;
 .price_div {
 float: left;
 width: 300px;
-height: 200px;
+height: 235px;
 border:1px solid #f5f5f5;
 border-radius: 8px;
 background-color: #282828;
@@ -31,8 +42,7 @@ background-color: #282828;
 
 .description_div {
 float: left;
-width: 630px;
-height: 270px;
+width: 1160px;
 margin-top: 30px;
 border:1px solid #f5f5f5;
 border-radius: 8px;
@@ -62,7 +72,7 @@ font-size: 40px;
 .musician_text {
 text-align: center;
 position: relative;
-top: 0px;
+top: 20px;
 color: #f5f5f5;
 font-size: 30px;
 }
@@ -71,12 +81,14 @@ font-size: 30px;
 text-align: center;
 color: #f5f5f5;
 font-size: 20px;
+margin-top: 60px;
 }
 
 .price_text {
 text-align: center;
 color: #f5f5f5;
-font-size: 70px;
+font-size: 80px;
+margin-bottom: 20px;
 }
 
 .description_text {
@@ -84,4 +96,9 @@ color: #f5f5f5;
 margin-top: 15px;
 margin-left: 30px;
 margin-right: 30px;
+}
+
+.songs_list {
+color: #f5f5f5;
+margin-top: 20px;
 }
