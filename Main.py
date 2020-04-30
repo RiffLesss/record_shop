@@ -6,7 +6,6 @@ from data.LoginForm import LoginForm
 from data.products import Product
 from data.carts import Cart
 from data.cart_product import Cart_Product
-from data.product_photo import Product_Photo
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import datetime
 
@@ -28,22 +27,19 @@ def main():
     def index():
         session = db_session.create_session()
         products = session.query(Product)
-        product_photo = session.query(Product_Photo)
-        return render_template("index.html", products=products, product_photo=product_photo)
+        return render_template("index.html", products=products)
 
     @app.route("/TopSingles")
     def singles():
         session = db_session.create_session()
         products = session.query(Product).filter(Product.is_lp == False)
-        product_photo = session.query(Product_Photo)
-        return render_template("index.html", products=products, product_photo=product_photo)
+        return render_template("index.html", products=products)
 
     @app.route("/TopAlbums")
     def albums():
         session = db_session.create_session()
         products = session.query(Product).filter(Product.is_lp == True)
-        product_photo = session.query(Product_Photo)
-        return render_template("index.html", products=products, product_photo=product_photo)
+        return render_template("index.html", products=products)
 
     @app.route('/register', methods=['GET', 'POST'])
     def reqister():
@@ -132,6 +128,7 @@ def main():
     @app.route("/count+/<int:id>")
     def plus_count(id):
         session.query(Cart_Product).filter(Cart_Product.id == id).update({Cart_Product.count: Cart_Product.count + 1})
+        session.commit()
         return redirect("/cart")
 
     @app.route("/count-/<int:id>")
@@ -139,6 +136,7 @@ def main():
         count = session.query(Cart_Product).get(id)
         if count.count > 1:
             session.query(Cart_Product).filter(Cart_Product.id == id).update({Cart_Product.count: Cart_Product.count - 1})
+            session.commit()
         return redirect("/cart")
 
 

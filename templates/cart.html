@@ -10,21 +10,29 @@
     <p class="word-cart">Cart</p>
     {% for item in cart_products %}
     <li class="cart-product-item">
-        <a href="/product/{{ item.id }}">
-            <img class="cart-product-photo" src="../static/img/rockwood.jpg" height="130" width="130" alt="No photo now">
-        </a>
-        <div class="item-text-div">
-            <p class="cart-product-item-name">{{ item.product.name }}</p>
-            <p class="cart-product-item-musician">{{ item.product.musician.name }}</p>
-            <p class="cart-product-item-year">{{ item.product.year }}</p>
+        <div class="item-text-div" link="#464544" vlink="#464544" alink="#464544">
+            <a class="cart-product-item-name" href="/product/{{ item.product.id }}">{{ item.product.name }}</a>
+            <a class="cart-product-item-musician" href="/product/{{ item.product.musician.id }}">{{ item.product.musician.name }}</a>
+            <a class="cart-product-item-year" href="/year/{{ item.product.year }}">{{ item.product.year }}</a>
         </div>
+        <a href="/product/{{ item.product.id }}">
+            <img class="cart-product-photo" src="{{ item.product.photo }}" height="130" width="130" alt="No photo now">
+        </a>
         <div class="item-right-div">
             <p class="cart-product-price">${{ item.product.price * item.count }}</p>
-            <div class="cpc">
-                <a class="btn btn-outline-secondary cpc-b-" href="/count-/{{ item.id }}">-</a>
-                <p class="cart-product-count">{{ item.count }}</p>
-                <a class="btn btn-outline-secondary cpc-b+" href="/count+/{{ item.id }}">+</a>
-            </div>
+            {% if current_user.is_authenticated and current_user.dark_theme %}
+                <div class="cpc">
+                    <a class="btn btn-outline-light cpc-b-" href="/count-/{{ item.id }}">-</a>
+                    <p class="cart-product-count">{{ item.count }}</p>
+                    <a class="btn btn-outline-light cpc-b+" href="/count+/{{ item.id }}">+</a>
+                </div>
+            {% else %}
+                <div class="cpc">
+                    <a class="btn btn-outline-secondary cpc-b-" href="/count-/{{ item.id }}">-</a>
+                    <p class="cart-product-count">{{ item.count }}</p>
+                    <a class="btn btn-outline-secondary cpc-b+" href="/count+/{{ item.id }}">+</a>
+                </div>
+            {% endif %}
         </div>
     </li>
     {% endfor %}
