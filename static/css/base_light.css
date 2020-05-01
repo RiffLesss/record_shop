@@ -1,23 +1,25 @@
 #navbarSupportedContent {
-    wight: 100%
-}
-
-#Log {
-    padding: 5px
-}
-
-body {
-    background-image: url(../img/wood2.jpg);
-    background-size: 100%
-}
-
-#Log{
-    padding: 5px
+    wight: 100%;
+    background: white
 }
 
 body {
     background-image: url(../img/wood.jpg);
     background-size: 100%
+}
+
+.right-li{
+    background: grey;
+    position: absolute;
+    right: 10px
+}
+
+.right {
+    display: inline-block
+}
+
+.dropdown {
+    background: red;
 }
 
 btn btn-outline-success my-2 my-sm-0 {
