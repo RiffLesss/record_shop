@@ -2,16 +2,27 @@
     wight: 100%
 }
 
-#Log {
-    padding: 5px
-}
-
 body {
-    background-image: url(../img/wood2.jpg);
+    background-image: url(../img/dark_wood.jpg);
     background-size: 100%
 }
 
-btn btn-outline-success my-2 my-sm-0 {
-color: white;
+.navbar {
+    background-color: #282828
 }
 
+.dropdown-menu {
+    background: #464544;
+}
+
+.dropdown-item {
+    color: #f5f5f5;
+}
+
+#search {
+    padding-right: 5px
+}
+
+btn btn-outline-success my-2 my-sm-0 {
+    color: white;
+}

@@ -1,25 +1,18 @@
 #navbarSupportedContent {
-    wight: 100%;
-    background: white
+    wight: 100%
 }
 
 body {
-    background-image: url(../img/wood.jpg);
+    background-image: url(../img/light_wood.png);
     background-size: 100%
 }
 
-.right-li{
-    background: grey;
-    position: absolute;
-    right: 10px
+.navbar {
+    background-color: #f5f5f5
 }
 
-.right {
-    display: inline-block
-}
-
-.dropdown {
-    background: red;
+#search {
+    padding-right: 5px
 }
 
 btn btn-outline-success my-2 my-sm-0 {

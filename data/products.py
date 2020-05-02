@@ -19,4 +19,3 @@ class Product(SqlAlchemyBase, SerializerMixin):
                                 sqlalchemy.ForeignKey("product_photo.product_id"))
     musician = orm.relation('Musician')
     cart_product = orm.relation('Cart_Product', back_populates='product')
-    product_photo = orm.relation('Product_Photo')

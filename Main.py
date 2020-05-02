@@ -117,7 +117,7 @@ def main():
     def change_theme():
         session = db_session.create_session()
         if current_user.dark_theme:
-            session.query(User).filter(User.id == current_user.id).update({User.dark_theme: 0},
+            session.query(User).filter(User.id == current_user. id).update({User.dark_theme: 0},
                                                                           synchronize_session=False)
         else:
             session.query(User).filter(User.id == current_user.id).update({User.dark_theme: 1},
