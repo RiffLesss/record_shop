@@ -13,9 +13,10 @@ class Product(SqlAlchemyBase, SerializerMixin):
     price = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     year = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     is_lp = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
+    photo = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     musician = orm.relation('Musician')
 
     cart_product = orm.relation('Cart_Product', back_populates='product')
-    product_photo = orm.relation('Product_Photo', back_populates='product')
     song = orm.relation('Song', back_populates='product')
+    review = orm.relation('Review', back_populates='product')

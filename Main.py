@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, make_response, session, redirect, abort
 from data import db_session
 from data.users import User
-from data.RegisterForm import RegisterForm
-from data.LoginForm import LoginForm
 from data.products import Product
 from data.songs import Song
 from data.carts import Cart
 from data.cart_product import Cart_Product
-from data.product_photo import Product_Photo
+from data.reviews import Review
+from data.RegisterForm import RegisterForm
+from data.LoginForm import LoginForm
+from data.ReviewsForm import ReviewsForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import datetime
 
@@ -22,7 +23,6 @@ login_manager.init_app(app)
 
 def main():
     db_session.global_init("db/shop.db")
-    #app.run()
     session = db_session.create_session()
 
     @app.route("/")
@@ -107,14 +107,24 @@ def main():
         session.commit()
         return redirect("/")
 
-    @app.route('/product/<int:id>')
+    @app.route('/product/<int:id>', methods=['GET', 'POST'])
     def product_page(id):
+        form = ReviewsForm()
         product = session.query(Product).filter(Product.id == id).first()
+        if form.validate_on_submit():
+            review_session = db_session.create_session()
+            review = Review()
+            review.content = form.content.data
+            review.product_id = id
+            current_user.review.append(review)
+            review_session.merge(current_user)
+            review_session.commit()
+        reviews = session.query(Review).filter(Review.product_id == id)
         if product.is_lp == 0:
-            return render_template("single.html", product=product)
+            return render_template("product.html", product=product, form=form, reviews=reviews)
         else:
             songs = session.query(Song).filter(Song.album_id == product.id)
-            return render_template("album.html", product=product, songs=songs)
+            return render_template("product.html", product=product, form=form, reviews=reviews, songs=songs)
 
     app.run()
 

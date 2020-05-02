@@ -10,17 +10,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
-    id = sqlalchemy.Column(sqlalchemy.Integer,
-                           primary_key=True, autoincrement=True)
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     surname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    email = sqlalchemy.Column(sqlalchemy.String,
-                              index=True, unique=True, nullable=True)
+    email = sqlalchemy.Column(sqlalchemy.String, index=True, unique=True, nullable=True)
     dark_theme = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True, default=False)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    created_date = sqlalchemy.Column(sqlalchemy.DateTime,
-                                     default=datetime.datetime.now)
+    created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
+
     carts = orm.relation("Cart", back_populates='user')
+    review = orm.relation("Review", back_populates='user')
 
     def __repr__(self):
         pass

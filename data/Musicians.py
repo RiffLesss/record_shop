@@ -6,7 +6,8 @@ from .db_session import SqlAlchemyBase
 
 class Musician(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'musicians'
-    id = sqlalchemy.Column(sqlalchemy.Integer,
-                           primary_key=True, autoincrement=True)
+
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
     product = orm.relation('Product', back_populates='musician')
