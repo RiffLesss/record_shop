@@ -18,3 +18,9 @@ body {
 btn btn-outline-success my-2 my-sm-0 {
     color: white;
 }
+
+.dropdown-item:hover {
+    text-decoration: none;
+    color: #464544;
+    background: #f5f5f5
+}

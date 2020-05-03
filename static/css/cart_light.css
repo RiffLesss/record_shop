@@ -71,6 +71,11 @@
 
 }
 
+a:hover {
+    text-decoration: none;
+    color: #464544;
+}
+
 .cart-product-item-musician {
     font-size: 25px;
     text-align: center;

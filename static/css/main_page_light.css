@@ -21,14 +21,12 @@
 }
 
 .item-name {
-    color: #464544;
     font-size: 30px;
     position: relative;
     top: 5px;
 }
 
 .item-musician {
-    color: #464544;
     font-size: 25px;
     position: relative;
     top: -15px;
@@ -44,4 +42,13 @@
 .product-photo {
     position: relative;
     top: -50px;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #464544;
+}
+
+a {
+    color: #464544
 }

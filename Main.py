@@ -5,6 +5,7 @@ from data.RegisterForm import RegisterForm
 from data.LoginForm import LoginForm
 from data.products import Product
 from data.carts import Cart
+from data.Musicians import Musician
 from data.cart_product import Cart_Product
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import datetime
@@ -39,6 +40,20 @@ def main():
     def albums():
         session = db_session.create_session()
         products = session.query(Product).filter(Product.is_lp == True)
+        return render_template("index.html", products=products)
+
+    @app.route("/year/<int:year>")
+    def year(year):
+        session = db_session.create_session()
+        products = session.query(Product).filter(Product.year == year)
+        return render_template("index.html", products=products)
+
+    @app.route("/musician/<name>")
+    def musician(name):
+        name = name.replace('%20', ' ')
+        session = db_session.create_session()
+        musician = session.query(Musician).filter(Musician.name == name).first()
+        products = session.query(Product).filter(Product.musician_id == musician.id)
         return render_template("index.html", products=products)
 
     @app.route('/register', methods=['GET', 'POST'])
