@@ -17,6 +17,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     email = sqlalchemy.Column(sqlalchemy.String,
                               index=True, unique=True, nullable=True)
     dark_theme = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True, default=False)
+    circle_theme = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True, default=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)

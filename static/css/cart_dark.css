@@ -154,3 +154,29 @@ a:hover {
     position: relative;
     bottom: -20px
 }
+
+.delete-product-photo {
+    position: absolute;
+    right: 180px;
+    top: 85px
+}
+
+.empty-cart {
+    background: #282828;
+    width: 50%;
+    height: 200px;
+    border-radius: 8px;
+    border: 2px solid #f5f5f5;
+    margin-bottom: 20px;
+    position: relative;
+    left: 25%;
+    right: 25%;
+    top: -10px;
+}
+
+.empty-cart-text {
+    color: #f5f5f5;
+    text-align: center;
+    width: 100%;
+    font-size: 40px
+}

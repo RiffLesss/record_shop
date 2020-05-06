@@ -98,10 +98,28 @@ def main():
 
     @app.route('/cart')
     def cart():
+        empty_cart = True
         cart = session.query(Cart).get(current_user.id)
         cart_products = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id)
         product_count = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id).count()
-        return render_template('cart.html', title='Cart', cart_products=cart_products, product_count=product_count)
+        if product_count == 0:
+            empty_cart = True
+        else:
+            empty_cart = False
+        return render_template('cart.html', title='Cart', cart_products=cart_products,
+                               product_count=product_count, empty_cart=empty_cart)
+
+    @app.route('/delete/<int:id>', methods=['GET', 'POST'])
+    @login_required
+    def delete(id):
+        session = db_session.create_session()
+        cart_products = session.query(Cart_Product).filter(Cart_Product.id == id).first()
+        if cart_products:
+            session.delete(cart_products)
+            session.commit()
+        else:
+            abort(404)
+        return redirect('/cart')
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -137,6 +155,19 @@ def main():
                                                                           synchronize_session=False)
         else:
             session.query(User).filter(User.id == current_user.id).update({User.dark_theme: 1},
+                                                                          synchronize_session=False)
+        session.commit()
+        return redirect("/")
+
+    @app.route('/changeform')
+    @login_required
+    def change_form():
+        session = db_session.create_session()
+        if current_user.circle_theme:
+            session.query(User).filter(User.id == current_user.id).update({User.circle_theme: 0},
+                                                                          synchronize_session=False)
+        else:
+            session.query(User).filter(User.id == current_user.id).update({User.circle_theme: 1},
                                                                           synchronize_session=False)
         session.commit()
         return redirect("/")

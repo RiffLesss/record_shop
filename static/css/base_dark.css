@@ -12,7 +12,7 @@ body {
 }
 
 .dropdown-menu {
-    background: #282828;
+    background: #282828
 }
 
 .dropdown-item {
@@ -31,4 +31,9 @@ btn btn-outline-success my-2 my-sm-0 {
     text-decoration: none;
     color: #f5f5f5;
     background: #282828
+}
+
+.ddsl {
+    position: relative;
+    right: 10px
 }

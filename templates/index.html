@@ -7,7 +7,11 @@
 {% endif %}
 <ul class="all-products">
     {% for item in products %}
-    <li class="product-item">
+    {% if current_user.is_authenticated and current_user.circle_theme %}
+        <li class="product-item" style="border-radius: 8px">
+    {% else %}
+        <li class="product-item" style="border-radius: 0px">
+    {% endif%}
         <div class="item-text">
             <p class="item-name">
                 <a href="/product/{{ item.id }}">{{ item.name }}</a>

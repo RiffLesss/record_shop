@@ -48,14 +48,14 @@
                         <a class="nav-link" href="/TopAlbums">Top Albums</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav ml-auto ddsl">
                     <li>
                         <form class="form-inline my-2 my-lg-0 right" id="search">
                             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                             <a class="btn btn-outline-secondary my-2 my-sm-0" href="" type="submit">Search</a>
                         </form>
                     </li>
-                    <li class="dd">
+                    <li>
                         {% if current_user.is_authenticated %}
                             <div class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -66,6 +66,7 @@
                                     <a class="dropdown-item" href="#">Profile</a>
                                     <a class="dropdown-item" href="/cart">Cart</a>
                                     <a class="dropdown-item" href="/changetheme">Change Theme</a>
+                                    <a class="dropdown-item" href="/changeform">Change Form</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="/logout">Log Out</a>
                                 </div>
