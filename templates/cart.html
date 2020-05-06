@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% set sum_price = 0 %}
+
 {% block content %}
 {% if current_user.is_authenticated and current_user.dark_theme %}
     <link rel="stylesheet" type="text/css" href="../static/css/cart_dark.css">
@@ -36,5 +38,19 @@
         </div>
     </li>
     {% endfor %}
+    <div class="order-div">
+        <p class="order-words">Place your order</p>
+        <div class="text_btn">
+            <div class="text-order-div">
+                <p class="sum-price">Full price: ${{ sum_price }}</p>
+                <p class="product-count">Record count: {{product_count}}</p>
+            </div>
+            {% if current_user.is_authenticated and current_user.dark_theme %}
+                <a class="btn btn-light order-btn">Order</a>
+            {% else %}
+                <a class="btn btn-dark text-light order-btn">Order</a>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}

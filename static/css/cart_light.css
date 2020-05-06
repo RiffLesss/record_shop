@@ -109,3 +109,49 @@ a:hover {
     top: -8px;
     left: 27px
 }
+
+.order-div {
+    margin: 0 auto;
+    align: center;
+    background: #f5f5f5;
+    width: 40%;
+    height: 150px;
+    border-radius: 8px;
+    border: 2px solid #464544;
+}
+
+.text-order-div {
+    position: relative;
+    left: 5px;
+    font-size: 30px;
+    display: flex;
+    flex-direction: column;
+    color: #464544
+}
+
+.order-words {
+    font-size: 30px;
+    color: #464544;
+    text-align: center;
+    margin-bottom: -20px
+}
+
+.order-btn {
+    width: 180px;
+    height: 70px;
+    position: relative;
+    right: -30px;
+    top: 30px;
+    font-size: 35px;
+    color: #white
+}
+
+.text_btn {
+    display: flex;
+    flex-direction: row;
+}
+
+.sum-price {
+    position: relative;
+    bottom: -20px
+}

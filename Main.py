@@ -100,7 +100,8 @@ def main():
     def cart():
         cart = session.query(Cart).get(current_user.id)
         cart_products = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id)
-        return render_template('cart.html', title='Cart', cart_products=cart_products)
+        product_count = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id).count()
+        return render_template('cart.html', title='Cart', cart_products=cart_products, product_count=product_count)
 
     @login_manager.user_loader
     def load_user(user_id):
