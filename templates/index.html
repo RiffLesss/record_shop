@@ -7,15 +7,24 @@
 {% endif %}
 <ul class="all-products">
     {% for item in products %}
-    <li class="product-item">
-        <p class="item-name">{{ item.name }}</p>
-        <p class="item-musician">{{ item.musician.name }}</p>>
+    {% if current_user.is_authenticated and current_user.circle_theme %}
+        <li class="product-item" style="border-radius: 8px">
+    {% else %}
+        <li class="product-item" style="border-radius: 0px">
+    {% endif%}
+        <div class="item-text">
+            <p class="item-name">
+                <a href="/product/{{ item.id }}">{{ item.name }}</a>
+            </p>
+            <p class="item-musician">
+                <a href="/musician/{{ item.musician.name }}">{{ item.musician.name }}</a>
+            </p>
+            <p class="item-price">${{ item.price }}</p>
+        </div>
         <a href="/product/{{ item.id }}">
-            <img class="product-photo" src="https://images.upvenue.com/images/2017/09/1504486786-nirvana-nevermind.jpg" height="240" width="240" alt="No photo now">
+            <img class="product-photo" src="{{ item.photo }}" height="240" width="240" alt="No photo now">
         </a>
-        <p class="item-price">${{ item.price }}</p>
     </li>
     {% endfor %}
 </ul>
 {% endblock %}
-

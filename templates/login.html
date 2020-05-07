@@ -32,7 +32,7 @@
         <p class="remember_me_flag">{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p><br></p>
         <p class="log_in_btn">{{ form.submit(type="submit", class="btn btn-secondary") }}<br></p>
-        <div>{{ message }}</div>
+        <p class="error-message">{{message}}</p>
     </form>
 </div>
 {% endblock %}

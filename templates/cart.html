@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% set sum_price = 0 %}
+
+{% block content %}
+{% if current_user.dark_theme %}
+    <link rel="stylesheet" type="text/css" href="../static/css/cart_dark.css">
+{% else %}
+    <link rel="stylesheet" type="text/css" href="../static/css/cart_light.css">
+{% endif %}
+<div class="all-cart-products">
+    <p class="word-cart">Cart</p>
+    {% for item in cart_products %}
+    {% if current_user.is_authenticated and current_user.circle_theme %}
+        <li class="cart-product-item" style="border-radius: 8px">
+    {% else %}
+        <li class="cart-product-item" style="border-radius: 0px">
+    {% endif%}
+        <div class="item-text-div">
+            <a class="cart-product-item-name" href="/product/{{ item.product.id }}">{{ item.product.name }}</a>
+            <a class="cart-product-item-musician" href="/product/{{ item.product.musician.id}}">{{ item.product.musician.name }}</a>
+            <a class="cart-product-item-year" href="/year/{{ item.product.year }}">{{ item.product.year }}</a>
+        </div>
+        <a href="/product/{{ item.product.id }}">
+            <img class="cart-product-photo" src="{{ item.product.photo }}" height="130" width="130" alt="No photo now">
+        </a>
+        {% if current_user.dark_theme %}
+            <a href="/delete/{{ item.id}}">
+                <img class="delete-product-photo" src="../static/img/delete_dark.jpg" height="40" width="30" alt="No photo now">
+            </a>
+        {% else %}
+        <a href="/delete/{{ item.id}}">
+                <img class="delete-product-photo" src="../static/img/delete_light.jpg" height="40" width="30" alt="No photo now">
+            </a>
+        {% endif %}
+        <div class="item-right-div">
+            <p class="cart-product-price">${{ item.product.price * item.count }}</p>
+            {% if current_user.dark_theme %}
+                <div class="cpc">
+                    <a class="btn btn-outline-light cpc-b-" href="/count-/{{ item.id }}">-</a>
+                    <p class="cart-product-count">{{ item.count }}</p>
+                    <a class="btn btn-outline-light cpc-b+" href="/count+/{{ item.id }}">+</a>
+                </div>
+            {% else %}
+                <div class="cpc">
+                    <a class="btn btn-outline-secondary cpc-b-" href="/count-/{{ item.id }}">-</a>
+                    <p class="cart-product-count">{{ item.count }}</p>
+                    <a class="btn btn-outline-secondary cpc-b+" href="/count+/{{ item.id }}">+</a>
+                </div>
+            {% endif %}
+        </div>
+    </li>
+    {% endfor %}
+    {% if empty_cart %}
+        <div class="empty-cart">
+            <p class="empty-cart-text">Your cart is empty<br>Please add products which you want to buy</p>
+        </div>
+    {% else %}
+        <div class="order-div">
+            <p class="order-words">Place your order</p>
+            <div class="text_btn">
+                <div class="text-order-div">
+                    <p class="sum-price">Full price: ${{ sum_price }}</p>
+                    <p class="product-count">Record count: {{product_count}}</p>
+                </div>
+                {% if current_user.dark_theme %}
+                    <a class="btn btn-light order-btn">Order</a>
+                {% else %}
+                    <a class="btn btn-dark text-light order-btn">Order</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

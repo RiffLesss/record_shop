@@ -2,9 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Expires" content="0"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="../static/img/rockwood.jpg" type="image/jpg">
     <link rel="stylesheet"
@@ -28,61 +25,63 @@
     <title>Rockwood</title>
 </head>
 <body>
-<header>
-    {% if current_user.is_authenticated and current_user.dark_theme %}
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color: #282828">
-    {% else %}
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    {% endif%}
-        <a class="navbar-brand" href="#">Rockwood</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/TopSingles">Top Singles</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/TopAlbums">Top Albums</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/TopMusicians">Top Musicians</a>
-                </li>
-                {% if current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/changetheme">Change Theme</a>
+    <header>
+        {% if current_user.is_authenticated and current_user.dark_theme %}
+            <nav class="navbar navbar-expand-lg navbar-dark">
+        {% else %}
+            <nav class="navbar navbar-expand-lg navbar-light">
+        {% endif%}
+            <a class="navbar-brand" href="#">Rockwood</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home</a>
                     </li>
-                {% endif %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
-            </form>
-            <div id="Log">
-                <a class="btn btn-outline-secondary my-2 my-sm-0" href="/register">Sign Up</a>
-                <a class="btn btn-outline-secondary my-2 my-sm-0" href="/login">Log In</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/TopSingles">Top Singles</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/TopAlbums">Top Albums</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto ddsl">
+                    <li>
+                        <form class="form-inline my-2 my-lg-0 right" id="search">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                            <a class="btn btn-outline-secondary my-2 my-sm-0" href="" type="submit">Search</a>
+                        </form>
+                    </li>
+                    <li>
+                        {% if current_user.is_authenticated %}
+                            <div class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ current_user.name}} {{ current_user.surname}}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">Profile</a>
+                                    <a class="dropdown-item" href="/cart">Cart</a>
+                                    <a class="dropdown-item" href="/changetheme">Change Theme</a>
+                                    <a class="dropdown-item" href="/changeform">Change Form</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/logout">Log Out</a>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div id="Log">
+                                <a class="btn btn-outline-secondary my-2 my-sm-0" href="/register">Sign Up</a>
+                                <a class="btn btn-outline-secondary my-2 my-sm-0" href="/login">Log In</a>
+                            </div>
+                        {% endif %}
+                    </li>
+                </ul>
             </div>
-        </div>
-    </nav>
-</header>
+        </nav>
+    </header>
 <main role="main" class="container">
     {% block content %}{% endblock %}
 </main>
