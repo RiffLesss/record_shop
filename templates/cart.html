@@ -18,7 +18,7 @@
     {% endif%}
         <div class="item-text-div">
             <a class="cart-product-item-name" href="/product/{{ item.product.id }}">{{ item.product.name }}</a>
-            <a class="cart-product-item-musician" href="/product/{{ item.product.musician.id}}">{{ item.product.musician.name }}</a>
+            <a class="cart-product-item-musician" href="/musician/{{ item.product.musician.name}}">{{ item.product.musician.name }}</a>
             <a class="cart-product-item-year" href="/year/{{ item.product.year }}">{{ item.product.year }}</a>
         </div>
         <a href="/product/{{ item.product.id }}">
@@ -34,7 +34,7 @@
             </a>
         {% endif %}
         <div class="item-right-div">
-            <p class="cart-product-price">${{ item.product.price * item.count }}</p>
+            <p class="cart-product-price">${{ item.full_price }}</p>
             {% if current_user.dark_theme %}
                 <div class="cpc">
                     <a class="btn btn-outline-light cpc-b-" href="/count-/{{ item.id }}">-</a>
@@ -60,13 +60,13 @@
             <p class="order-words">Place your order</p>
             <div class="text_btn">
                 <div class="text-order-div">
-                    <p class="sum-price">Full price: ${{ sum_price }}</p>
+                    <p class="sum-price">Full price: ${{ full_price }}</p>
                     <p class="product-count">Record count: {{product_count}}</p>
                 </div>
                 {% if current_user.dark_theme %}
-                    <a class="btn btn-light order-btn">Order</a>
+                    <a class="btn btn-light order-btn" href="/order/{{ current_user_id }}">Order</a>
                 {% else %}
-                    <a class="btn btn-dark text-light order-btn">Order</a>
+                    <a class="btn btn-dark text-light order-btn" href="/order/{{ current_user_id }}">Order</a>
                 {% endif %}
             </div>
         </div>

@@ -3,11 +3,17 @@ from data import db_session
 from data.users import User
 from data.RegisterForm import RegisterForm
 from data.LoginForm import LoginForm
+from data.ReviewsForm import ReviewsForm
+from data.OrderForm import OrderForm
 from data.products import Product
+from data.songs import Song
+from data.Musicians import Musician
 from data.carts import Cart
 from data.cart_product import Cart_Product
-from data.product_photo import Product_Photo
+from data.reviews import Review
+from data.orders import Order
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from sqlalchemy import func
 import datetime
 
 
@@ -75,9 +81,8 @@ def main():
                 email=form.email.data,
             )
             user.set_password(form.password.data)
-            user_cart = Cart(user_id=user.id)
+
             session.add(user)
-            session.add(user_cart)
             session.commit()
             return redirect('/login')
         return render_template('register.html', title='Registration', form=form)
@@ -118,10 +123,11 @@ def main():
         cart_products = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id)
         product_count = session.query(func.sum(Cart_Product.count)).filter_by(cart_id=cart.id).scalar()
         full_price = session.query(func.sum(Cart_Product.full_price)).filter_by(cart_id=cart.id).scalar()
-        if cart_products:
+        current_user_id = current_user.id
+        if cart_products.count() == 0:
             empty_cart = True
         return render_template('cart.html', title='Cart', cart_products=cart_products,
-                               product_count=product_count, full_price=full_price, empty_cart=empty_cart)
+                               product_count=product_count, full_price=full_price, empty_cart=empty_cart, current_user_id=current_user_id)
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -136,11 +142,21 @@ def main():
             user = session.query(User).filter(User.email == form.email.data).first()
             if user and user.check_password(form.password.data):
                 login_user(user, remember=form.remember_me.data)
-                return redirect("/")
+                return redirect("/create_cart")
             return render_template('login.html',
                                    message="Wrong email or password",
                                    form=form)
         return render_template('login.html', title='Authorization', form=form)
+
+    @app.route('/create_cart')
+    def create_cart():
+        old_cart = session.query(Cart).filter(Cart.user_id == current_user.id).first()
+        if not old_cart:
+            user_cart = Cart()
+            user_cart.user_id = current_user.id
+            session.add(user_cart)
+            session.commit()
+        return redirect("/")
 
     @app.route('/logout')
     @login_required
@@ -220,25 +236,11 @@ def main():
             songs = session.query(Song).filter(Song.album_id == product.id)
             return render_template("product.html", product=product, form=form, reviews=reviews, songs=songs)
 
-    @app.route('/add_to_cart/<int:id>')
-    @login_required
-    def add_to_cart(id):
-        product = session.query(Product).get(id)
-        cart = session.query(Cart).filter(Cart.user_id == current_user.id).first()
-        cart_product = Cart_Product(
-            product_id=product.id,
-            cart_id=cart.id,
-            count=1,
-            one_price=product.price,
-            full_price=product.price
-        )
-        session.add(cart_product)
-        session.commit()
-        address = '/product/' + str(id)
-        return redirect(address)
 
     @app.route('/order/<int:id>', methods=['GET', 'POST'])
     def order_page(id):
+        cart = session.query(Cart).filter(Cart.id == current_user.id).first()
+        id = cart.id
         form = OrderForm()
         if form.validate_on_submit():
             order_session = db_session.create_session()
