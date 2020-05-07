@@ -6,9 +6,11 @@ from data.songs import Song
 from data.carts import Cart
 from data.cart_product import Cart_Product
 from data.reviews import Review
+from data.orders import Order
 from data.RegisterForm import RegisterForm
 from data.LoginForm import LoginForm
 from data.ReviewsForm import ReviewsForm
+from data.OrderForm import OrderForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import datetime
 
@@ -126,8 +128,52 @@ def main():
             songs = session.query(Song).filter(Song.album_id == product.id)
             return render_template("product.html", product=product, form=form, reviews=reviews, songs=songs)
 
+    @app.route('/add_to_cart/<int:id>')
+    @login_required
+    def add_to_cart(id):
+        product = session.query(Product).get(id)
+        cart = session.query(Cart).filter(Cart.user_id == current_user.id).first()
+        cart_product = Cart_Product(
+            product_id=product.id,
+            cart_id=cart.id,
+            count=1,
+            one_price=product.price,
+            full_price=product.price
+        )
+        session.add(cart_product)
+        session.commit()
+        address = '/product/' + str(id)
+        return redirect(address)
+
+    @app.route('/order/<int:id>', methods=['GET', 'POST'])
+    def order_page(id):
+        form = OrderForm()
+        if form.validate_on_submit():
+            order_session = db_session.create_session()
+            order = Order()
+            order.cart_id = id
+            order.surname = form.surname.data
+            order.name = form.name.data
+            order.phone = form.phone.data
+            order.home_delivery = form.home_delivery.data
+            order.country = form.country.data
+            order.town = form.town.data
+            order.street = form.street.data
+            order.house = form.house.data
+            order.flat = form.flat.data
+            order.promo = form.promo.data
+            order_session.merge(current_user)
+            order_session.commit()
+            redirect("/")
+        return render_template("order.html", form=form)
+
+
     app.run()
 
 
 if __name__ == '__main__':
     main()
+
+
+# full_price = session.query(func.sum(Cart_Product.full_price)).filter_by(cart_id=cart.id).scalar()
+

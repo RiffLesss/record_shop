@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated and current_user.dark_theme %}
+    <link rel="stylesheet" type="text/css" href="../static/css/order_dark.css">
+{% else %}
+    <link rel="stylesheet" type="text/css" href="../static/css/order_light.css">
+{% endif %}
+<div class="order_div">
+    <p class="title_text">Order registration</p>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+            {{ form.csrf_token }}
+        <div class="details_div">
+            <p class="details_text">Please, enter your details</p>
+            <p class="form_details_text">
+                {{ form.surname.label }}<br>
+                {{ form.surname(class="form-control") }}<br>
+                {% for error in form.surname.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+            </p>
+            <p class="form_details_text">
+                {{ form.name.label }}<br>
+                {{ form.name(class="form-control") }}<br>
+                {% for error in form.name.errors %}
+                   <p class="alert alert-danger" role="alert">
+                       {{ error }}
+                   </p>
+               {% endfor %}
+            </p>
+            <p class="form_details_text">
+                {{ form.phone.label }}<br>
+                {{ form.phone(class="form-control") }}<br>
+                {% for error in form.phone.errors %}
+                   <p class="alert alert-danger" role="alert">
+                       {{ error }}
+                   </p>
+               {% endfor %}
+            </p>
+        </div>
+        <p class="delivery_text">Please, choose a delivery method</p>
+        <div class="delivery_div">
+            <div class="delivery_form_div">
+                <div class="home_delivery_div">
+                    <p class="home_delivery_text">Please, enter the delivery address</p>
+                    <p class="form_address_text">{{ form.home_delivery() }} {{ form.home_delivery.label }}</p>
+                    <p class="form_address_text">
+                        {{ form.country.label }}<br>
+                        {{ form.country(class="form-control") }}<br>
+                        {% for error in form.country.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </p>
+                    <p class="form_address_text">
+                        {{ form.town.label }}<br>
+                        {{ form.town(class="form-control") }}<br>
+                        {% for error in form.town.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </p>
+                    <p class="form_address_text">
+                        {{ form.street.label }}<br>
+                        {{ form.street(class="form-control") }}<br>
+                        {% for error in form.street.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </p>
+                    <p class="form_address_text">
+                        {{ form.house.label }}<br>
+                        {{ form.house(class="form-control") }}<br>
+                        {% for error in form.house.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </p>
+                    <p class="form_address_text">
+                        {{ form.flat.label }}<br>
+                        {{ form.flat(class="form-control") }}<br>
+                        {% for error in form.flat.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </p>
+                </div>
+                <div class="pay_div">
+                    <p class="home_delivery_text">Place your order</p>
+                    <p class="form_address_text">
+                        {{ form.promo.label }}<br>
+                        {{ form.promo(class="form-control") }}<br>
+                        {% for error in form.promo.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </p>
+                    {% if current_user.dark_theme %}
+                        <p class="order_btn">{{ form.submit(type="submit", class="btn btn-outline-light my-2 my-sm-0 btn-lg") }}</p>
+                    {% else %}
+                        <p class="order_btn">{{ form.submit(type="submit", class="btn btn-outline-dark my-2 my-sm-0 btn-lg") }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="map_div">
+                <div class="pick-up_delivery_div">
+                    <p class="pick-up_delivery_text">Select the pick-up point</p>
+                    <p class="pick-up_provider_text">СДЭК</p>
+                    <p class="pick-up_provider_text">Delivery time: 5-7 days</p>
+                    <p class="pick-up_provider_text">Price: $4.99</p>
+                    <p class="map">
+                        <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A753a6d03bb7937c89c7ca5d47c8e9a717f4db686be31de42bc9c57c13fc9d3be&amp;width=525&amp;height=525&amp;lang=ru_RU&amp;scroll=true"></script>
+                    </p>
+                </div>
+                <div class="pick-up_delivery_div">
+                    <p class="pick-up_delivery_text">Select the pick-up point</p>
+                    <p class="pick-up_provider_text">BOXBERRY</p>
+                    <p class="pick-up_provider_text">Delivery time: 7-10 days</p>
+                    <p class="pick-up_provider_text">Price: $4.99</p>
+                    <p class="map">
+                        <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Afa240139cbc91206ef10e6dcec48da971bfe9446288f74c22782320c4cbc4ab7&amp;width=525&amp;height=525&amp;lang=ru_RU&amp;scroll=true"></script>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

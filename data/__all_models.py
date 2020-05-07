@@ -8,3 +8,5 @@ from . import RegisterForm
 from . import songs
 from . import reviews
 from . import ReviewsForm
+from . import orders
+from . import OrderForm

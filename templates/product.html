@@ -39,7 +39,7 @@
         {% if current_user.dark_theme %}
             {% if current_user.is_authenticated %}
                 <div class="add_button_div">
-                    <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/login" role="button">Add to cart</a>
+                    <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/add_to_cart/{{ product.id }}" role="button">Add to cart</a>
                 </div>
                 <div class="buy_button_div">
                     <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/login" role="button">Buy now</a>
@@ -55,7 +55,7 @@
         {% else %}
             {% if current_user.is_authenticated %}
                 <div class="add_button_div">
-                    <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/login" role="button">Add to cart</a>
+                    <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/add_to_cart/{{ product.id }}" role="button">Add to cart</a>
                 </div>
                 <div class="buy_button_div">
                     <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/login" role="button">Buy now</a>
