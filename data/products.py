@@ -17,5 +17,6 @@ class Product(SqlAlchemyBase, SerializerMixin):
     is_lp = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
     photo = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("product_photo.product_id"))
+    views = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=0)
     musician = orm.relation('Musician')
     cart_product = orm.relation('Cart_Product', back_populates='product')

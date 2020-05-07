@@ -11,5 +11,7 @@ class Cart_Product(SqlAlchemyBase, SerializerMixin):
     product_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("products.id"))
     cart_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("carts.id"))
     count = sqlalchemy.Column(sqlalchemy.Integer, default=1, nullable=True)
+    one_price = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    full_price = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     cart = orm.relation('Cart')
     product = orm.relation('Product')

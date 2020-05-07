@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, make_response, session, redirect, abort
+from sqlalchemy import func
 from data import db_session
 from data.users import User
 from data.RegisterForm import RegisterForm
@@ -27,25 +28,25 @@ def main():
     @app.route("/")
     def index():
         session = db_session.create_session()
-        products = session.query(Product)
+        products = session.query(Product).order_by(Product.views.desc())
         return render_template("index.html", products=products)
 
     @app.route("/TopSingles")
     def singles():
         session = db_session.create_session()
-        products = session.query(Product).filter(Product.is_lp == False)
+        products = session.query(Product).filter(Product.is_lp == False).order_by(Product.views.desc())
         return render_template("index.html", products=products)
 
     @app.route("/TopAlbums")
     def albums():
         session = db_session.create_session()
-        products = session.query(Product).filter(Product.is_lp == True)
+        products = session.query(Product).filter(Product.is_lp == True).order_by(Product.views.desc())
         return render_template("index.html", products=products)
 
     @app.route("/year/<int:year>")
     def year(year):
         session = db_session.create_session()
-        products = session.query(Product).filter(Product.year == year)
+        products = session.query(Product).filter(Product.year == year).order_by(Product.views.desc())
         return render_template("index.html", products=products)
 
     @app.route("/musician/<name>")
@@ -53,7 +54,7 @@ def main():
         name = name.replace('%20', ' ')
         session = db_session.create_session()
         musician = session.query(Musician).filter(Musician.name == name).first()
-        products = session.query(Product).filter(Product.musician_id == musician.id)
+        products = session.query(Product).filter(Product.musician_id == musician.id).order_by(Product.views.desc())
         return render_template("index.html", products=products)
 
     @app.route('/register', methods=['GET', 'POST'])
@@ -82,32 +83,22 @@ def main():
             return redirect('/login')
         return render_template('register.html', title='Registration', form=form)
 
-    @app.route("/cookie_test")
-    def cookie_test():
-        visits_count = int(request.cookies.get("visits_count", 0))
-        if visits_count:
-            res = make_response(f"Вы пришли на эту страницу {visits_count + 1} раз")
-            res.set_cookie("visits_count", str(visits_count + 1),
-                           max_age=60 * 60 * 24 * 365 * 2)
-        else:
-            res = make_response(
-                "Вы пришли на эту страницу в первый раз за последние 2 года")
-            res.set_cookie("visits_count", '1',
-                           max_age=60 * 60 * 24 * 365 * 2)
-        return res
-
-    @app.route('/cart')
-    def cart():
-        empty_cart = True
-        cart = session.query(Cart).get(current_user.id)
-        cart_products = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id)
-        product_count = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id).count()
-        if product_count == 0:
-            empty_cart = True
-        else:
-            empty_cart = False
-        return render_template('cart.html', title='Cart', cart_products=cart_products,
-                               product_count=product_count, empty_cart=empty_cart)
+    @app.route('/add_to_cart/<int:id>')
+    @login_required
+    def add_to_cart(id):
+        product = session.query(Product).get(id)
+        cart = session.query(Cart).filter(Cart.user_id == current_user.id).first()
+        cart_product = Cart_Product(
+            product_id=product.id,
+            cart_id=cart.id,
+            count=1,
+            one_price=product.price,
+            full_price=product.price
+        )
+        session.add(cart_product)
+        session.commit()
+        address = '/product/' + str(id)
+        return redirect(address)
 
     @app.route('/delete/<int:id>', methods=['GET', 'POST'])
     @login_required
@@ -120,6 +111,18 @@ def main():
         else:
             abort(404)
         return redirect('/cart')
+
+    @app.route('/cart')
+    def cart():
+        empty_cart = False
+        cart = session.query(Cart).get(current_user.id)
+        cart_products = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id)
+        product_count = session.query(func.sum(Cart_Product.count)).filter_by(cart_id=cart.id).scalar()
+        full_price = session.query(func.sum(Cart_Product.full_price)).filter_by(cart_id=cart.id).scalar()
+        if cart_products:
+            empty_cart = True
+        return render_template('cart.html', title='Cart', cart_products=cart_products,
+                               product_count=product_count, full_price=full_price, empty_cart=empty_cart)
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -174,7 +177,13 @@ def main():
 
     @app.route("/count+/<int:id>")
     def plus_count(id):
-        session.query(Cart_Product).filter(Cart_Product.id == id).update({Cart_Product.count: Cart_Product.count + 1})
+        session.query(Cart_Product).filter(Cart_Product.id == id).\
+            update({Cart_Product.count: Cart_Product.count + 1,
+                    Cart_Product.full_price: Cart_Product.one_price * (Cart_Product.count + 1)})
+        c_p = session.query(Cart_Product).filter(Cart_Product.id == id).first()
+        full_price = round(c_p.full_price, 2)
+        session.query(Cart_Product).filter(Cart_Product.id == id). \
+            update({Cart_Product.full_price: full_price})
         session.commit()
         return redirect("/cart")
 
@@ -182,7 +191,13 @@ def main():
     def minus_count(id):
         count = session.query(Cart_Product).get(id)
         if count.count > 1:
-            session.query(Cart_Product).filter(Cart_Product.id == id).update({Cart_Product.count: Cart_Product.count - 1})
+            session.query(Cart_Product).filter(Cart_Product.id == id). \
+                update({Cart_Product.count: Cart_Product.count - 1,
+                        Cart_Product.full_price: Cart_Product.one_price * (Cart_Product.count - 1)})
+            c_p = session.query(Cart_Product).filter(Cart_Product.id == id).first()
+            full_price = round(c_p.full_price, 2)
+            session.query(Cart_Product).filter(Cart_Product.id == id). \
+                update({Cart_Product.full_price: full_price})
             session.commit()
         return redirect("/cart")
 
