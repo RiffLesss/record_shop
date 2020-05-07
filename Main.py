@@ -33,34 +33,39 @@ def main():
     @app.route("/")
     def index():
         session = db_session.create_session()
+        special = session.query(Product).get(1)
         products = session.query(Product).order_by(Product.views.desc())
-        return render_template("index.html", products=products)
+        return render_template("index.html", products=products, special=special)
 
     @app.route("/TopSingles")
     def singles():
         session = db_session.create_session()
+        special = False
         products = session.query(Product).filter(Product.is_lp == False).order_by(Product.views.desc())
-        return render_template("index.html", products=products)
+        return render_template("index.html", products=products, special=special)
 
     @app.route("/TopAlbums")
     def albums():
         session = db_session.create_session()
+        special = session.query(Product).get(1)
         products = session.query(Product).filter(Product.is_lp == True).order_by(Product.views.desc())
-        return render_template("index.html", products=products)
+        return render_template("index.html", products=products, special=special)
 
     @app.route("/year/<int:year>")
     def year(year):
         session = db_session.create_session()
+        special = False
         products = session.query(Product).filter(Product.year == year).order_by(Product.views.desc())
-        return render_template("index.html", products=products)
+        return render_template("index.html", products=products, special=special)
 
     @app.route("/musician/<name>")
     def musician(name):
         name = name.replace('%20', ' ')
         session = db_session.create_session()
         musician = session.query(Musician).filter(Musician.name == name).first()
+        special = False
         products = session.query(Product).filter(Product.musician_id == musician.id).order_by(Product.views.desc())
-        return render_template("index.html", products=products)
+        return render_template("index.html", products=products, special=special)
 
     @app.route('/register', methods=['GET', 'POST'])
     def reqister():
@@ -234,7 +239,8 @@ def main():
             return render_template("product.html", product=product, form=form, reviews=reviews)
         else:
             songs = session.query(Song).filter(Song.album_id == product.id)
-            return render_template("product.html", product=product, form=form, reviews=reviews, songs=songs)
+            songs_count = songs.count()
+            return render_template("product.html", product=product, form=form, reviews=reviews, songs=songs, songs_count=songs_count)
 
 
     @app.route('/order/<int:id>', methods=['GET', 'POST'])

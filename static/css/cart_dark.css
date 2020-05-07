@@ -123,6 +123,7 @@ a:hover {
 .text-order-div {
     position: relative;
     left: 5px;
+    top: 10px;
     font-size: 25px;
     display: flex;
     flex-direction: column;
