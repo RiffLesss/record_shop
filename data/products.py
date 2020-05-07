@@ -20,3 +20,5 @@ class Product(SqlAlchemyBase, SerializerMixin):
     views = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=0)
     musician = orm.relation('Musician')
     cart_product = orm.relation('Cart_Product', back_populates='product')
+    song = orm.relation('Song', back_populates='product')
+    review = orm.relation('Review', back_populates='product')

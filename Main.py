@@ -1,13 +1,12 @@
 from flask import Flask, render_template, request, make_response, session, redirect, abort
-from sqlalchemy import func
 from data import db_session
 from data.users import User
 from data.RegisterForm import RegisterForm
 from data.LoginForm import LoginForm
 from data.products import Product
 from data.carts import Cart
-from data.Musicians import Musician
 from data.cart_product import Cart_Product
+from data.product_photo import Product_Photo
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import datetime
 
@@ -154,7 +153,7 @@ def main():
     def change_theme():
         session = db_session.create_session()
         if current_user.dark_theme:
-            session.query(User).filter(User.id == current_user. id).update({User.dark_theme: 0},
+            session.query(User).filter(User.id == current_user.id).update({User.dark_theme: 0},
                                                                           synchronize_session=False)
         else:
             session.query(User).filter(User.id == current_user.id).update({User.dark_theme: 1},
@@ -200,6 +199,65 @@ def main():
                 update({Cart_Product.full_price: full_price})
             session.commit()
         return redirect("/cart")
+
+
+    @app.route('/product/<int:id>', methods=['GET', 'POST'])
+    def product_page(id):
+        form = ReviewsForm()
+        product = session.query(Product).filter(Product.id == id).first()
+        if form.validate_on_submit():
+            review_session = db_session.create_session()
+            review = Review()
+            review.content = form.content.data
+            review.product_id = id
+            current_user.review.append(review)
+            review_session.merge(current_user)
+            review_session.commit()
+        reviews = session.query(Review).filter(Review.product_id == id)
+        if product.is_lp == 0:
+            return render_template("product.html", product=product, form=form, reviews=reviews)
+        else:
+            songs = session.query(Song).filter(Song.album_id == product.id)
+            return render_template("product.html", product=product, form=form, reviews=reviews, songs=songs)
+
+    @app.route('/add_to_cart/<int:id>')
+    @login_required
+    def add_to_cart(id):
+        product = session.query(Product).get(id)
+        cart = session.query(Cart).filter(Cart.user_id == current_user.id).first()
+        cart_product = Cart_Product(
+            product_id=product.id,
+            cart_id=cart.id,
+            count=1,
+            one_price=product.price,
+            full_price=product.price
+        )
+        session.add(cart_product)
+        session.commit()
+        address = '/product/' + str(id)
+        return redirect(address)
+
+    @app.route('/order/<int:id>', methods=['GET', 'POST'])
+    def order_page(id):
+        form = OrderForm()
+        if form.validate_on_submit():
+            order_session = db_session.create_session()
+            order = Order()
+            order.cart_id = id
+            order.surname = form.surname.data
+            order.name = form.name.data
+            order.phone = form.phone.data
+            order.home_delivery = form.home_delivery.data
+            order.country = form.country.data
+            order.town = form.town.data
+            order.street = form.street.data
+            order.house = form.house.data
+            order.flat = form.flat.data
+            order.promo = form.promo.data
+            order_session.merge(current_user)
+            order_session.commit()
+            redirect("/")
+        return render_template("order.html", form=form)
 
 
     app.run()
