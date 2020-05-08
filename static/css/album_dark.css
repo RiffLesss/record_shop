@@ -92,13 +92,34 @@ height: 135px;
 
 .review_user_div {
 float: left;
+display: flex;
 width: 1000px;
 height: 135px;
 }
 
+.review_user_name_div {
+width: 460px;
+}
+
+.created_date_div {
+width: 460px;
+margin-left: 30px;
+}
+
 .review_content_div {
 width: 1160px;
-margin-top: 135px;
+margin-top: 150px;
+display: flex;
+}
+
+.review_delete_div {
+width: 150px;
+height: 30px;
+margin-left: 30px;
+}
+
+.review_content_text_div {
+width: 980px;
 }
 
 .name_text {
@@ -164,7 +185,7 @@ margin-left: 30px;
 
 .review_user_text {
 color: #f5f5f5;
-font-size: 40px;
+font-size: 60px;
 margin-left: 30px;
 }
 
@@ -172,11 +193,11 @@ margin-left: 30px;
 color: #f5f5f5;
 margin-top: 30px;
 margin-left: 30px;
+text-align: right;
 }
 
 .review_content_text {
 color: #f5f5f5;
 margin-top: 30px;
-margin-left: 180px;
 margin-right: 30px;
 }

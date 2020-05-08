@@ -216,7 +216,6 @@ def main():
             session.commit()
         return redirect("/cart")
 
-
     @app.route('/product/<int:id>', methods=['GET', 'POST'])
     def product_page(id):
         form = ReviewsForm()
@@ -235,7 +234,6 @@ def main():
         else:
             songs = session.query(Song).filter(Song.album_id == product.id)
             return render_template("product.html", product=product, form=form, reviews=reviews, songs=songs)
-
 
     @app.route('/order/<int:id>', methods=['GET', 'POST'])
     def order_page(id):
@@ -258,8 +256,24 @@ def main():
             order.promo = form.promo.data
             order_session.merge(current_user)
             order_session.commit()
-            redirect("/")
+            return redirect("/thanks")
         return render_template("order.html", form=form)
+
+    @app.route('/review_delete/<int:id>', methods=['GET', 'POST'])
+    @login_required
+    def review_delete(id):
+        session = db_session.create_session()
+        review = session.query(Review).filter(Review.id == id, Review.user == current_user).first()
+        if review:
+            session.delete(review)
+            session.commit()
+        else:
+            abort(404)
+        return redirect('/')
+
+    @app.route('/thanks')
+    def thanks():
+        return render_template("thanks.html")
 
 
     app.run()

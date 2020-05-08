@@ -41,15 +41,9 @@
                 <div class="add_button_div">
                     <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/add_to_cart/{{ product.id }}" role="button">Add to cart</a>
                 </div>
-                <div class="buy_button_div">
-                    <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/login" role="button">Buy now</a>
-                </div>
             {% else %}
                 <div class="add_button_div">
                     <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/login" role="button">Add to cart</a>
-                </div>
-                <div class="buy_button_div">
-                    <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/login" role="button">Buy now</a>
                 </div>
             {% endif %}
         {% else %}
@@ -57,15 +51,9 @@
                 <div class="add_button_div">
                     <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/add_to_cart/{{ product.id }}" role="button">Add to cart</a>
                 </div>
-                <div class="buy_button_div">
-                    <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/login" role="button">Buy now</a>
-                </div>
             {% else %}
                 <div class="add_button_div">
                     <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/login" role="button">Add to cart</a>
-                </div>
-                <div class="buy_button_div">
-                    <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/login" role="button">Buy now</a>
                 </div>
             {% endif %}
         {% endif %}
@@ -106,11 +94,26 @@
                     <img class="review_img" src="../static/img/rockwood.jpg" width="120" height="120" alt="No photo now">
                 </div>
                 <div class="review_user_div">
-                    <p class="review_user_text">{{ item.user.surname }} {{ item.user.name }}</p>
-                    <p class="review_created_date_text">{{ item.created_date }}</p>
+                    <div class="review_user_name_div">
+                        <p class="review_user_text">{{ item.user.surname }} {{ item.user.name }}</p>
+                    </div>
+                    <div class="created_date_div">
+                        <p class="review_created_date_text">{{ item.created_date }}</p>
+                    </div>
                 </div>
                 <div class="review_content_div">
-                    <p class="review_content_text">{{ item.content }}</p>
+                    <div class="review_delete_div">
+                        {% if current_user.is_authenticated and current_user == item.user %}
+                            {% if current_user.dark_theme %}
+                                <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/review_delete/{{ item.id }}" role="button">Delete</a>
+                            {% else %}
+                                <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/review_delete/{{ item.id }}" role="button">Delete</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="review_content_text_div">
+                        <p class="review_content_text">{{ item.content }}</p>
+                    </div>
                 </div>
             </div>
         {% endfor %}
