@@ -54,7 +54,7 @@ def main():
     @app.route("/TopAlbums")
     def albums():
         session = db_session.create_session()
-        special = session.query(Product).get(1)
+        special = False
         products = session.query(Product).filter(Product.is_lp == True).order_by(Product.views.desc())
         return render_template("index.html", products=products, special=special)
 
