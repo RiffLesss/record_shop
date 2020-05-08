@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated and current_user.dark_theme %}
+    <link rel="stylesheet" type="text/css" href="../static/css/thanks_dark.css">
+{% else %}
+    <link rel="stylesheet" type="text/css" href="../static/css/thanks_light.css">
+{% endif %}
+<div class="thanks_div">
+    <p class="thanks_text">Thank you for ordering</p>
+    <p class="order_registered_text">Your order is registered and will be delivered soon</p>
+    <div class="btn_div">
+        {% if current_user.dark_theme %}
+            <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/" role="button">Home</a>
+        {% else %}
+            <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/" role="button">Home</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

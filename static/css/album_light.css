@@ -52,14 +52,9 @@ background-color: #f5f5f5;
 .add_button_div {
 float: left;
 position: relative;
-left: 25px;
+left: 82px;
 }
 
-.buy_button_div {
-float: left;
-position: relative;
-left: 30px;
-}
 
 .add_review_div {
 float: left;
@@ -92,13 +87,34 @@ height: 135px;
 
 .review_user_div {
 float: left;
+display: flex;
 width: 1000px;
 height: 135px;
 }
 
+.review_user_name_div {
+width: 460px;
+}
+
+.created_date_div {
+width: 460px;
+margin-left: 30px;
+}
+
 .review_content_div {
 width: 1160px;
-margin-top: 135px;
+margin-top: 150px;
+display: flex;
+}
+
+.review_delete_div {
+width: 150px;
+height: 30px;
+margin-left: 30px;
+}
+
+.review_content_text_div {
+width: 980px;
 }
 
 .name_text {
@@ -112,7 +128,7 @@ font-size: 40px;
 .musician_text {
 text-align: center;
 position: relative;
-top: 20px;
+top: 10px;
 color: #464544;
 font-size: 30px;
 }
@@ -120,8 +136,9 @@ font-size: 30px;
 .year_text {
 text-align: center;
 color: #464544;
-font-size: 20px;
-margin-top: 60px;
+position: relative;
+top: 10px;
+font-size: 40px;
 }
 
 .price_text {
@@ -151,7 +168,7 @@ margin-right: 30px;
 font-size: 40px;
 }
 
-form {
+.review_form {
 margin-left: 30px;
 margin-right: 30px;
 margin-top: -20px;
@@ -164,7 +181,7 @@ margin-left: 30px;
 
 .review_user_text {
 color: #464544;
-font-size: 40px;
+font-size: 60px;
 margin-left: 30px;
 }
 
@@ -172,11 +189,20 @@ margin-left: 30px;
 color: #464544;
 margin-top: 30px;
 margin-left: 30px;
+text-align: right;
 }
 
 .review_content_text {
 color: #464544;
 margin-top: 30px;
-margin-left: 180px;
 margin-right: 30px;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #464544;
+}
+
+.song_text {
+    color: #464544
 }

@@ -1,0 +1,19 @@
+<changelist name="Uncommitted_changes_before_Update_at_5_7_2020_7_26_PM_[Default_Changelist]" date="1588868775147" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_7_2020_7_26_PM_[Default_Changelist]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 5/7/2020 7:26 PM [Default Changelist]" />
+  <binary>
+    <option name="BEFORE_PATH" value="static/img/delete _light.jpg" />
+    <option name="AFTER_PATH" value="static/img/delete_light.jpg" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_7_2020_7_26_PM_[Default_Changelist]/delete_light.jpg" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="static/img/delete _dark.jpg" />
+    <option name="AFTER_PATH" value="static/img/delete_dark.jpg" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_7_2020_7_26_PM_[Default_Changelist]/delete_dark.jpg" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="db/shop.db" />
+    <option name="AFTER_PATH" value="db/shop.db" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_7_2020_7_26_PM_[Default_Changelist]/shop.db" />
+  </binary>
+</changelist>

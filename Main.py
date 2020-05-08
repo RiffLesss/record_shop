@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, make_response, session, redirect, abort
+from flask_restful import reqparse, abort, Api, Resource
+from data.product_resourses import ProductResource, ProductListResource
 from data import db_session
 from data.users import User
 from data.RegisterForm import RegisterForm
@@ -14,6 +16,7 @@ from data.reviews import Review
 from data.orders import Order
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from sqlalchemy import func
+import product_api
 import datetime
 
 
@@ -21,46 +24,55 @@ app = Flask(__name__)
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
+api = Api(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
 
 def main():
     db_session.global_init("db/shop.db")
-    #app.run()
+    api.add_resource(ProductListResource, '/api/products')
+    api.add_resource(ProductResource, '/api/product/<int:product_id>')
+    app.register_blueprint(product_api.blueprint)
     session = db_session.create_session()
 
     @app.route("/")
     def index():
         session = db_session.create_session()
+        special = session.query(Product).get(1)
         products = session.query(Product).order_by(Product.views.desc())
-        return render_template("index.html", products=products)
+        return render_template("index.html", products=products, special=special)
 
     @app.route("/TopSingles")
     def singles():
         session = db_session.create_session()
+        special = False
         products = session.query(Product).filter(Product.is_lp == False).order_by(Product.views.desc())
-        return render_template("index.html", products=products)
+        return render_template("index.html", products=products, special=special)
 
     @app.route("/TopAlbums")
     def albums():
         session = db_session.create_session()
+        special = False
         products = session.query(Product).filter(Product.is_lp == True).order_by(Product.views.desc())
-        return render_template("index.html", products=products)
+        return render_template("index.html", products=products, special=special)
 
     @app.route("/year/<int:year>")
     def year(year):
         session = db_session.create_session()
+        special = False
         products = session.query(Product).filter(Product.year == year).order_by(Product.views.desc())
-        return render_template("index.html", products=products)
+        return render_template("index.html", products=products, special=special)
 
     @app.route("/musician/<name>")
     def musician(name):
         name = name.replace('%20', ' ')
         session = db_session.create_session()
         musician = session.query(Musician).filter(Musician.name == name).first()
+        special = False
         products = session.query(Product).filter(Product.musician_id == musician.id).order_by(Product.views.desc())
-        return render_template("index.html", products=products)
+        return render_template("index.html", products=products, special=special)
 
     @app.route('/register', methods=['GET', 'POST'])
     def reqister():
@@ -234,13 +246,21 @@ def main():
             return render_template("product.html", product=product, form=form, reviews=reviews)
         else:
             songs = session.query(Song).filter(Song.album_id == product.id)
-            return render_template("product.html", product=product, form=form, reviews=reviews, songs=songs)
+            songs_count = songs.count()
+            return render_template("product.html", product=product, form=form, reviews=reviews, songs=songs, songs_count=songs_count)
 
 
-    @app.route('/order/<int:id>', methods=['GET', 'POST'])
-    def order_page(id):
+    @app.route('/order/<delivery>', methods=['GET', 'POST'])
+    def order_page(delivery):
         cart = session.query(Cart).filter(Cart.id == current_user.id).first()
         id = cart.id
+        if delivery == 'home':
+            delivery_price = 9.99
+        elif delivery == 'sdek':
+            delivery_price = 5.99
+        elif delivery == 'boxberry':
+            delivery_price = 4.99
+        full_price = session.query(func.sum(Cart_Product.full_price)).filter_by(cart_id=id).scalar()
         form = OrderForm()
         if form.validate_on_submit():
             order_session = db_session.create_session()
@@ -249,17 +269,35 @@ def main():
             order.surname = form.surname.data
             order.name = form.name.data
             order.phone = form.phone.data
-            order.home_delivery = form.home_delivery.data
+            order.delivery = delivery
+            order.delivery_price = delivery_price
             order.country = form.country.data
             order.town = form.town.data
             order.street = form.street.data
             order.house = form.house.data
             order.flat = form.flat.data
             order.promo = form.promo.data
-            order_session.merge(current_user)
+            order_session.add(order)
             order_session.commit()
-            redirect("/")
-        return render_template("order.html", form=form)
+            return redirect("/thanks")
+        return render_template("order.html", form=form, cart_id=id,
+                               full_price=full_price, delivery_price=delivery_price, delivery=delivery)
+
+    @app.route('/review_delete/<int:id>', methods=['GET', 'POST'])
+    @login_required
+    def review_delete(id):
+        session = db_session.create_session()
+        review = session.query(Review).filter(Review.id == id, Review.user == current_user).first()
+        if review:
+            session.delete(review)
+            session.commit()
+        else:
+            abort(404)
+        return redirect('/')
+
+    @app.route('/thanks')
+    def thanks():
+        return render_template("thanks.html")
 
 
     app.run()

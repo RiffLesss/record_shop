@@ -1,0 +1,848 @@
+Index: Main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from flask import Flask, render_template, request, make_response, session, redirect, abort\r\nfrom data import db_session\r\nfrom data.users import User\r\nfrom data.RegisterForm import RegisterForm\r\nfrom data.LoginForm import LoginForm\r\nfrom data.products import Product\r\nfrom data.carts import Cart\r\nfrom data.cart_product import Cart_Product\r\nfrom data.product_photo import Product_Photo\r\nfrom flask_login import LoginManager, login_user, login_required, logout_user, current_user\r\nimport datetime\r\n\r\n\r\napp = Flask(__name__)\r\napp.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)\r\napp.config['SECRET_KEY'] = 'yandexlyceum_secret_key'\r\n\r\nlogin_manager = LoginManager()\r\nlogin_manager.init_app(app)\r\n\r\n\r\ndef main():\r\n    db_session.global_init(\"db/shop.db\")\r\n    #app.run()\r\n    session = db_session.create_session()\r\n\r\n    @app.route(\"/\")\r\n    def index():\r\n        session = db_session.create_session()\r\n        products = session.query(Product)\r\n        return render_template(\"index.html\", products=products)\r\n\r\n    @app.route('/register', methods=['GET', 'POST'])\r\n    def reqister():\r\n        form = RegisterForm()\r\n        if form.validate_on_submit():\r\n            if form.password.data != form.password_again.data:\r\n                return render_template('register.html', title='Registration',\r\n                                       form=form,\r\n                                       message=\"Passwords don't match\")\r\n            session = db_session.create_session()\r\n            if session.query(User).filter(User.email == form.email.data).first():\r\n                return render_template('register.html', title='Registration',\r\n                                       form=form,\r\n                                       message=\"This user already exists\")\r\n            user = User(\r\n                name=form.name.data,\r\n                surname=form.surname.data,\r\n                email=form.email.data,\r\n            )\r\n            user.set_password(form.password.data)\r\n            session.add(user)\r\n            session.commit()\r\n            return redirect('/login')\r\n        return render_template('register.html', title='Registration', form=form)\r\n\r\n    @app.route(\"/cookie_test\")\r\n    def cookie_test():\r\n        visits_count = int(request.cookies.get(\"visits_count\", 0))\r\n        if visits_count:\r\n            res = make_response(f\"Вы пришли на эту страницу {visits_count + 1} раз\")\r\n            res.set_cookie(\"visits_count\", str(visits_count + 1),\r\n                           max_age=60 * 60 * 24 * 365 * 2)\r\n        else:\r\n            res = make_response(\r\n                \"Вы пришли на эту страницу в первый раз за последние 2 года\")\r\n            res.set_cookie(\"visits_count\", '1',\r\n                           max_age=60 * 60 * 24 * 365 * 2)\r\n        return res\r\n\r\n    @login_manager.user_loader\r\n    def load_user(user_id):\r\n        session = db_session.create_session()\r\n        return session.query(User).get(user_id)\r\n\r\n    @app.route('/login', methods=['GET', 'POST'])\r\n    def login():\r\n        form = LoginForm()\r\n        if form.validate_on_submit():\r\n            session = db_session.create_session()\r\n            user = session.query(User).filter(User.email == form.email.data).first()\r\n            if user and user.check_password(form.password.data):\r\n                login_user(user, remember=form.remember_me.data)\r\n                return redirect(\"/\")\r\n            return render_template('login.html',\r\n                                   message=\"Wrong email or password\",\r\n                                   form=form)\r\n        return render_template('login.html', title='Authorization', form=form)\r\n\r\n    @app.route('/logout')\r\n    @login_required\r\n    def logout():\r\n        logout_user()\r\n        return redirect(\"/\")\r\n\r\n    @app.route('/changetheme')\r\n    @login_required\r\n    def change_theme():\r\n        session = db_session.create_session()\r\n        if current_user.dark_theme:\r\n            session.query(User).filter(User.id == current_user.id).update({User.dark_theme: 0},\r\n                                                                          synchronize_session=False)\r\n        else:\r\n            session.query(User).filter(User.id == current_user.id).update({User.dark_theme: 1},\r\n                                                                          synchronize_session=False)\r\n        session.commit()\r\n        return redirect(\"/\")\r\n\r\n    app.run()\r\n\r\n\r\nif __name__ == '__main__':\r\n    main()
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Main.py	(revision 83b1d5033825ed039e1da1ab8189a26cc7e6cbf5)
++++ Main.py	(date 1588847820518)
+@@ -5,8 +5,8 @@
+ from data.LoginForm import LoginForm
+ from data.products import Product
+ from data.carts import Cart
++from data.Musicians import Musician
+ from data.cart_product import Cart_Product
+-from data.product_photo import Product_Photo
+ from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+ import datetime
+ 
+@@ -30,6 +30,32 @@
+         products = session.query(Product)
+         return render_template("index.html", products=products)
+ 
++    @app.route("/TopSingles")
++    def singles():
++        session = db_session.create_session()
++        products = session.query(Product).filter(Product.is_lp == False)
++        return render_template("index.html", products=products)
++
++    @app.route("/TopAlbums")
++    def albums():
++        session = db_session.create_session()
++        products = session.query(Product).filter(Product.is_lp == True)
++        return render_template("index.html", products=products)
++
++    @app.route("/year/<int:year>")
++    def year(year):
++        session = db_session.create_session()
++        products = session.query(Product).filter(Product.year == year)
++        return render_template("index.html", products=products)
++
++    @app.route("/musician/<name>")
++    def musician(name):
++        name = name.replace('%20', ' ')
++        session = db_session.create_session()
++        musician = session.query(Musician).filter(Musician.name == name).first()
++        products = session.query(Product).filter(Product.musician_id == musician.id)
++        return render_template("index.html", products=products)
++
+     @app.route('/register', methods=['GET', 'POST'])
+     def reqister():
+         form = RegisterForm()
+@@ -49,7 +75,9 @@
+                 email=form.email.data,
+             )
+             user.set_password(form.password.data)
++            user_cart = Cart(user_id=user.id)
+             session.add(user)
++            session.add(user_cart)
+             session.commit()
+             return redirect('/login')
+         return render_template('register.html', title='Registration', form=form)
+@@ -68,6 +96,13 @@
+                            max_age=60 * 60 * 24 * 365 * 2)
+         return res
+ 
++    @app.route('/cart')
++    def cart():
++        cart = session.query(Cart).get(current_user.id)
++        cart_products = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id)
++        product_count = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id).count()
++        return render_template('cart.html', title='Cart', cart_products=cart_products, product_count=product_count)
++
+     @login_manager.user_loader
+     def load_user(user_id):
+         session = db_session.create_session()
+@@ -98,7 +133,7 @@
+     def change_theme():
+         session = db_session.create_session()
+         if current_user.dark_theme:
+-            session.query(User).filter(User.id == current_user.id).update({User.dark_theme: 0},
++            session.query(User).filter(User.id == current_user. id).update({User.dark_theme: 0},
+                                                                           synchronize_session=False)
+         else:
+             session.query(User).filter(User.id == current_user.id).update({User.dark_theme: 1},
+@@ -106,6 +141,21 @@
+         session.commit()
+         return redirect("/")
+ 
++    @app.route("/count+/<int:id>")
++    def plus_count(id):
++        session.query(Cart_Product).filter(Cart_Product.id == id).update({Cart_Product.count: Cart_Product.count + 1})
++        session.commit()
++        return redirect("/cart")
++
++    @app.route("/count-/<int:id>")
++    def minus_count(id):
++        count = session.query(Cart_Product).get(id)
++        if count.count > 1:
++            session.query(Cart_Product).filter(Cart_Product.id == id).update({Cart_Product.count: Cart_Product.count - 1})
++            session.commit()
++        return redirect("/cart")
++
++
+     app.run()
+ 
+ 
+Index: templates/base.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta http-equiv=\"Cache-Control\" content=\"no-cache, no-store, must-revalidate\"/>\r\n    <meta http-equiv=\"Pragma\" content=\"no-cache\"/>\r\n    <meta http-equiv=\"Expires\" content=\"0\"/>\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\r\n    <link rel=\"shortcut icon\" href=\"../static/img/rockwood.jpg\" type=\"image/jpg\">\r\n    <link rel=\"stylesheet\"\r\n          href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\"\r\n          integrity=\"sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh\"\r\n          crossorigin=\"anonymous\">\r\n    <script src=\"https://code.jquery.com/jquery-3.4.1.slim.min.js\"\r\n            integrity=\"sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n\"\r\n            crossorigin=\"anonymous\"></script>\r\n    <script src=\"https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js\"\r\n            integrity=\"sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo\"\r\n            crossorigin=\"anonymous\"></script>\r\n    <script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js\"\r\n            integrity=\"sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6\"\r\n            crossorigin=\"anonymous\"></script>\r\n    {% if current_user.is_authenticated and current_user.dark_theme %}\r\n        <link rel=\"stylesheet\" type=\"text/css\" href=\"../static/css/base_dark.css\">\r\n    {% else %}\r\n        <link rel=\"stylesheet\" type=\"text/css\" href=\"../static/css/base_light.css\">\r\n    {% endif %}\r\n    <title>Rockwood</title>\r\n</head>\r\n<body>\r\n<header>\r\n    {% if current_user.is_authenticated and current_user.dark_theme %}\r\n        <nav class=\"navbar navbar-expand-lg navbar-dark bg-dark\" style=\"background-color: #282828\">\r\n    {% else %}\r\n        <nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\r\n    {% endif%}\r\n        <a class=\"navbar-brand\" href=\"#\">Rockwood</a>\r\n        <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\"\r\n                aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\r\n            <span class=\"navbar-toggler-icon\"></span>\r\n        </button>\r\n\r\n        <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\r\n            <ul class=\"navbar-nav mr-auto\">\r\n                <li class=\"nav-item active\">\r\n                    <a class=\"nav-link\" href=\"/\">Home</a>\r\n                </li>\r\n                <li class=\"nav-item\">\r\n                    <a class=\"nav-link\" href=\"/TopSingles\">Top Singles</a>\r\n                </li>\r\n                <li class=\"nav-item\">\r\n                    <a class=\"nav-link\" href=\"/TopAlbums\">Top Albums</a>\r\n                </li>\r\n                <li class=\"nav-item\">\r\n                    <a class=\"nav-link\" href=\"/TopMusicians\">Top Musicians</a>\r\n                </li>\r\n                {% if current_user.is_authenticated %}\r\n                    <li class=\"nav-item\">\r\n                        <a class=\"nav-link\" href=\"/changetheme\">Change Theme</a>\r\n                    </li>\r\n                {% endif %}\r\n                <li class=\"nav-item dropdown\">\r\n                    <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"navbarDropdown\" role=\"button\"\r\n                       data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                        Dropdown\r\n                    </a>\r\n                    <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown\">\r\n                        <a class=\"dropdown-item\" href=\"#\">Action</a>\r\n                        <a class=\"dropdown-item\" href=\"#\">Another action</a>\r\n                        <div class=\"dropdown-divider\"></div>\r\n                        <a class=\"dropdown-item\" href=\"#\">Something else here</a>\r\n                    </div>\r\n                </li>\r\n            </ul>\r\n            <form class=\"form-inline my-2 my-lg-0\">\r\n                <input class=\"form-control mr-sm-2\" type=\"search\" placeholder=\"Search\" aria-label=\"Search\">\r\n                <button class=\"btn btn-outline-secondary my-2 my-sm-0\" type=\"submit\">Search</button>\r\n            </form>\r\n            <div id=\"Log\">\r\n                <a class=\"btn btn-outline-secondary my-2 my-sm-0\" href=\"/register\">Sign Up</a>\r\n                <a class=\"btn btn-outline-secondary my-2 my-sm-0\" href=\"/login\">Log In</a>\r\n            </div>\r\n        </div>\r\n    </nav>\r\n</header>\r\n<main role=\"main\" class=\"container\">\r\n    {% block content %}{% endblock %}\r\n</main>\r\n</body>\r\n</html>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- templates/base.html	(revision 83b1d5033825ed039e1da1ab8189a26cc7e6cbf5)
++++ templates/base.html	(date 1588847737657)
+@@ -2,9 +2,6 @@
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+-    <meta http-equiv="Pragma" content="no-cache"/>
+-    <meta http-equiv="Expires" content="0"/>
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     <link rel="shortcut icon" href="../static/img/rockwood.jpg" type="image/jpg">
+     <link rel="stylesheet"
+@@ -28,61 +25,62 @@
+     <title>Rockwood</title>
+ </head>
+ <body>
+-<header>
+-    {% if current_user.is_authenticated and current_user.dark_theme %}
+-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color: #282828">
+-    {% else %}
+-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+-    {% endif%}
+-        <a class="navbar-brand" href="#">Rockwood</a>
+-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+-            <span class="navbar-toggler-icon"></span>
+-        </button>
+-
+-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+-            <ul class="navbar-nav mr-auto">
+-                <li class="nav-item active">
+-                    <a class="nav-link" href="/">Home</a>
+-                </li>
+-                <li class="nav-item">
+-                    <a class="nav-link" href="/TopSingles">Top Singles</a>
+-                </li>
+-                <li class="nav-item">
+-                    <a class="nav-link" href="/TopAlbums">Top Albums</a>
+-                </li>
+-                <li class="nav-item">
+-                    <a class="nav-link" href="/TopMusicians">Top Musicians</a>
+-                </li>
+-                {% if current_user.is_authenticated %}
+-                    <li class="nav-item">
+-                        <a class="nav-link" href="/changetheme">Change Theme</a>
+-                    </li>
+-                {% endif %}
+-                <li class="nav-item dropdown">
+-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+-                        Dropdown
+-                    </a>
+-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+-                        <a class="dropdown-item" href="#">Action</a>
+-                        <a class="dropdown-item" href="#">Another action</a>
+-                        <div class="dropdown-divider"></div>
+-                        <a class="dropdown-item" href="#">Something else here</a>
+-                    </div>
+-                </li>
+-            </ul>
+-            <form class="form-inline my-2 my-lg-0">
+-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+-                <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+-            </form>
+-            <div id="Log">
+-                <a class="btn btn-outline-secondary my-2 my-sm-0" href="/register">Sign Up</a>
+-                <a class="btn btn-outline-secondary my-2 my-sm-0" href="/login">Log In</a>
+-            </div>
+-        </div>
+-    </nav>
+-</header>
++    <header>
++        {% if current_user.is_authenticated and current_user.dark_theme %}
++            <nav class="navbar navbar-expand-lg navbar-dark">
++        {% else %}
++            <nav class="navbar navbar-expand-lg navbar-light">
++        {% endif%}
++            <a class="navbar-brand" href="#">Rockwood</a>
++            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
++                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
++                <span class="navbar-toggler-icon"></span>
++            </button>
++            <div class="collapse navbar-collapse" id="navbarSupportedContent">
++                <ul class="navbar-nav mr-auto">
++                    <li class="nav-item active">
++                        <a class="nav-link" href="/">Home</a>
++                    </li>
++                    <li class="nav-item">
++                        <a class="nav-link" href="/TopSingles">Top Singles</a>
++                    </li>
++                    <li class="nav-item">
++                        <a class="nav-link" href="/TopAlbums">Top Albums</a>
++                    </li>
++                </ul>
++                <ul class="navbar-nav ml-auto">
++                    <li>
++                        <form class="form-inline my-2 my-lg-0 right" id="search">
++                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
++                            <a class="btn btn-outline-secondary my-2 my-sm-0" href="" type="submit">Search</a>
++                        </form>
++                    </li>
++                    <li class="dd">
++                        {% if current_user.is_authenticated %}
++                            <div class="nav-item dropdown">
++                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
++                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
++                                    {{ current_user.name}} {{ current_user.surname}}
++                                </a>
++                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
++                                    <a class="dropdown-item" href="#">Profile</a>
++                                    <a class="dropdown-item" href="/cart">Cart</a>
++                                    <a class="dropdown-item" href="/changetheme">Change Theme</a>
++                                    <div class="dropdown-divider"></div>
++                                    <a class="dropdown-item" href="/logout">Log Out</a>
++                                </div>
++                            </div>
++                        {% else %}
++                            <div id="Log">
++                                <a class="btn btn-outline-secondary my-2 my-sm-0" href="/register">Sign Up</a>
++                                <a class="btn btn-outline-secondary my-2 my-sm-0" href="/login">Log In</a>
++                            </div>
++                        {% endif %}
++                    </li>
++                </ul>
++            </div>
++        </nav>
++    </header>
+ <main role="main" class="container">
+     {% block content %}{% endblock %}
+ </main>
+Index: templates/index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends \"base.html\" %}\r\n{% block content %}\r\n{% if current_user.is_authenticated and current_user.dark_theme %}\r\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"../static/css/main_page_dark.css\">\r\n{% else %}\r\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"../static/css/main_page_light.css\">\r\n{% endif %}\r\n<ul class=\"all-products\">\r\n    {% for item in products %}\r\n    <li class=\"product-item\">\r\n        <p class=\"item-name\">{{ item.name }}</p>\r\n        <p class=\"item-musician\">{{ item.musician.name }}</p>>\r\n        <a href=\"/product/{{ item.id }}\">\r\n            <img class=\"product-photo\" src=\"https://images.upvenue.com/images/2017/09/1504486786-nirvana-nevermind.jpg\" height=\"240\" width=\"240\" alt=\"No photo now\">\r\n        </a>\r\n        <p class=\"item-price\">${{ item.price }}</p>\r\n    </li>\r\n    {% endfor %}\r\n</ul>\r\n{% endblock %}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- templates/index.html	(revision 83b1d5033825ed039e1da1ab8189a26cc7e6cbf5)
++++ templates/index.html	(date 1588847793868)
+@@ -8,14 +8,19 @@
+ <ul class="all-products">
+     {% for item in products %}
+     <li class="product-item">
+-        <p class="item-name">{{ item.name }}</p>
+-        <p class="item-musician">{{ item.musician.name }}</p>>
++        <div class="item-text">
++            <p class="item-name">
++                <a href="/product/{{ item.id }}">{{ item.name }}</a>
++            </p>
++            <p class="item-musician">
++                <a href="/musician/{{ item.musician.name }}">{{ item.musician.name }}</a>
++            </p>
++            <p class="item-price">${{ item.price }}</p>
++        </div>
+         <a href="/product/{{ item.id }}">
+-            <img class="product-photo" src="https://images.upvenue.com/images/2017/09/1504486786-nirvana-nevermind.jpg" height="240" width="240" alt="No photo now">
++            <img class="product-photo" src="{{ item.photo }}" height="240" width="240" alt="No photo now">
+         </a>
+-        <p class="item-price">${{ item.price }}</p>
+     </li>
+     {% endfor %}
+ </ul>
+-{% endblock %}
+-
++{% endblock %}
+\ No newline at end of file
+Index: templates/cart.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- templates/cart.html	(date 1588847632944)
++++ templates/cart.html	(date 1588847632944)
+@@ -0,0 +1,56 @@
++{% extends "base.html" %}
++
++{% set sum_price = 0 %}
++
++{% block content %}
++{% if current_user.is_authenticated and current_user.dark_theme %}
++    <link rel="stylesheet" type="text/css" href="../static/css/cart_dark.css">
++{% else %}
++    <link rel="stylesheet" type="text/css" href="../static/css/cart_light.css">
++{% endif %}
++<div class="all-cart-products">
++    <p class="word-cart">Cart</p>
++    {% for item in cart_products %}
++    <li class="cart-product-item">
++        <div class="item-text-div" link="#464544" vlink="#464544" alink="#464544">
++            <a class="cart-product-item-name" href="/product/{{ item.product.id }}">{{ item.product.name }}</a>
++            <a class="cart-product-item-musician" href="/product/{{ item.product.musician.id}}">{{ item.product.musician.name }}</a>
++            <a class="cart-product-item-year" href="/year/{{ item.product.year }}">{{ item.product.year }}</a>
++        </div>
++        <a href="/product/{{ item.product.id }}">
++            <img class="cart-product-photo" src="{{ item.product.photo }}" height="130" width="130" alt="No photo now">
++        </a>
++        <div class="item-right-div">
++            <p class="cart-product-price">${{ item.product.price * item.count }}</p>
++            {% if current_user.is_authenticated and current_user.dark_theme %}
++                <div class="cpc">
++                    <a class="btn btn-outline-light cpc-b-" href="/count-/{{ item.id }}">-</a>
++                    <p class="cart-product-count">{{ item.count }}</p>
++                    <a class="btn btn-outline-light cpc-b+" href="/count+/{{ item.id }}">+</a>
++                </div>
++            {% else %}
++                <div class="cpc">
++                    <a class="btn btn-outline-secondary cpc-b-" href="/count-/{{ item.id }}">-</a>
++                    <p class="cart-product-count">{{ item.count }}</p>
++                    <a class="btn btn-outline-secondary cpc-b+" href="/count+/{{ item.id }}">+</a>
++                </div>
++            {% endif %}
++        </div>
++    </li>
++    {% endfor %}
++    <div class="order-div">
++        <p class="order-words">Place your order</p>
++        <div class="text_btn">
++            <div class="text-order-div">
++                <p class="sum-price">Full price: ${{ sum_price }}</p>
++                <p class="product-count">Record count: {{product_count}}</p>
++            </div>
++            {% if current_user.is_authenticated and current_user.dark_theme %}
++                <a class="btn btn-light order-btn">Order</a>
++            {% else %}
++                <a class="btn btn-dark text-light order-btn">Order</a>
++            {% endif %}
++        </div>
++    </div>
++</div>
++{% endblock %}
+\ No newline at end of file
+Index: static/css/cart_light.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- static/css/cart_light.css	(date 1588847633021)
++++ static/css/cart_light.css	(date 1588847633021)
+@@ -0,0 +1,157 @@
++.all-cart-products {
++    position: relative;
++    top: 20px;
++}
++
++.cart-product-item {
++    background: #f5f5f5;
++    display: flex;
++    flex-direction: row;
++    width: 90%;
++    height: 150px;
++    border-radius: 8px;
++    border: 2px solid #464544;
++    margin-bottom: 20px;
++    position: relative;
++    left: 5%;
++    right: 5%;
++    top: -10px;
++}
++
++.word-cart {
++    font-size: 50px;
++    color: #464544;
++    text-align: center
++}
++
++.item-right-div {
++    display: flex;
++    flex-direction: column;
++    position: absolute;
++    right: 25px;
++    top: 10px;
++    width: 150px;
++    color: #464544
++}
++
++.cpc {
++    height: 40px;
++    display: flex;
++    flex-direction: row;
++    justify-content: space-between;
++    font-size: 25px
++}
++
++.cart-product-price {
++    font-size: 40px;
++    text-align: center
++}
++
++.cart-product-photo {
++    position: relative;
++    top: 8px;
++    left: 10px
++}
++
++.item-text-div {
++    position: absolute;
++    width: 100%;
++    height: 100%;
++    margin: 0 auto;
++    display: flex;
++    align-items: center;
++    flex-direction: column;
++    justify-content: center
++}
++
++.cart-product-item-name {
++    font-size: 30px;
++    text-align: center;
++    color: #464544
++
++}
++
++a:hover {
++    text-decoration: none;
++    color: #464544;
++}
++
++.cart-product-item-musician {
++    font-size: 25px;
++    text-align: center;
++    color: #464544
++
++}
++
++.cart-product-item-year {
++    font-size: 20px;
++    text-align: center;
++    color: #464544
++
++}
++
++.cpc-b+ {
++    position: absolute;
++    right: 0px
++}
++
++.cpc-b- {
++    position: absolute;
++    left: 0px
++}
++
++.cart-product-count {
++    text-align: center;
++    width: 80px;
++    font-size: 30px;
++    margin: 5px;
++    position: relative;
++    top: -8px;
++    left: 27px
++}
++
++.order-div {
++    margin: 0 auto;
++    align: center;
++    background: #f5f5f5;
++    width: 40%;
++    height: 150px;
++    border-radius: 8px;
++    border: 2px solid #464544;
++}
++
++.text-order-div {
++    position: relative;
++    left: 5px;
++    font-size: 30px;
++    display: flex;
++    flex-direction: column;
++    color: #464544
++}
++
++.order-words {
++    font-size: 30px;
++    color: #464544;
++    text-align: center;
++    margin-bottom: -20px
++}
++
++.order-btn {
++    width: 180px;
++    height: 70px;
++    position: relative;
++    right: -30px;
++    top: 30px;
++    font-size: 35px;
++    color: #white
++}
++
++.text_btn {
++    display: flex;
++    flex-direction: row;
++}
++
++.sum-price {
++    position: relative;
++    bottom: -20px
++}
+\ No newline at end of file
+Index: static/css/main_page_light.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>.product-item {\r\n    display: inline-block;\r\n\tborder: 2px solid #464544;\r\n\tborder-radius: 8px;\r\n\tposition: relative;\r\n\tright: 0px;\r\n\tbackground-color: #f5f5f5;\r\n\tmargin: 5px;\r\n\ttext-decoration: none;\r\n\theight: 400px;\r\n\twidth: 250px;\r\n\ttext-align: center;\r\n}\r\n\r\n.all-products {\r\n    position: relative;\r\n    margin: 0px 0 0 -13%;\r\n    top: 20px;\r\n    width: 125%;\r\n    display: center;\r\n}\r\n\r\n.item-name {\r\n    color: #464544;\r\n    font-size: 30px;\r\n    position: relative;\r\n    top: 5px;\r\n}\r\n\r\n.item-musician {\r\n    color: #464544;\r\n    font-size: 25px;\r\n    position: relative;\r\n    top: -15px;\r\n}\r\n\r\n.item-price {\r\n    color: #464544;\r\n    font-size: 40px;\r\n    position: relative;\r\n    top: -47px;\r\n}\r\n\r\n.product-photo {\r\n    position: relative;\r\n    top: -50px;\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- static/css/main_page_light.css	(revision 83b1d5033825ed039e1da1ab8189a26cc7e6cbf5)
++++ static/css/main_page_light.css	(date 1588847872861)
+@@ -2,12 +2,12 @@
+     display: inline-block;
+ 	border: 2px solid #464544;
+ 	border-radius: 8px;
++	margin: 5px;
+ 	position: relative;
+ 	right: 0px;
+ 	background-color: #f5f5f5;
+-	margin: 5px;
+ 	text-decoration: none;
+-	height: 400px;
++	height: 410px;
+ 	width: 250px;
+ 	text-align: center;
+ }
+@@ -21,26 +21,50 @@
+ }
+ 
+ .item-name {
+-    color: #464544;
++    display: flex;
++    align-items: center;
++    justify-content: center;
+     font-size: 30px;
++    height: 60px;
+     position: relative;
+-    top: 5px;
++    top: 0px;
++    line-height: 1
+ }
+ 
+ .item-musician {
+-    color: #464544;
+     font-size: 25px;
+-    position: relative;
+-    top: -15px;
++    width: 100%;
++    position: absolute;
++    top: 60px
++
+ }
+ 
+ .item-price {
+     color: #464544;
+     font-size: 40px;
++    width: 100%;
++    position: absolute;
++    top: 90px;
++}
++
++.product-photo {
+     position: relative;
+-    top: -47px;
++    top: -200px;
++}
++
++a:hover {
++    text-decoration: none;
++    color: #464544;
++}
++
++a {
++    color: #464544
+ }
+ 
+-.product-photo {
++.item-text {
++    width: 250px;
++    height: 205px;
+     position: relative;
+-    top: -50px;
++    top: 250px;
++    left: -2px
++}
+\ No newline at end of file
+Index: static/css/main_page_dark.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>.product-item {\r\n    display: inline-block;\r\n\tborder: 1px solid white;\r\n\tborder-radius: 8px;\r\n\tposition: relative;\r\n\tright: 0px;\r\n\tbackground-color: #282828;\r\n\tmargin: 5px;\r\n\ttext-decoration: none;\r\n\theight: 400px;\r\n\twidth: 250px;\r\n\ttext-align: center;\r\n}\r\n\r\n.all-products {\r\n    position: relative;\r\n    margin: 0px 0 0 -13%;\r\n    top: 20px;\r\n    width: 125%;\r\n    display: center;\r\n}\r\n\r\n.item-name {\r\n    color: white;\r\n    font-size: 30px;\r\n    position: relative;\r\n    top: 5px;\r\n}\r\n\r\n.item-musician {\r\n    color: white;\r\n    font-size: 25px;\r\n    position: relative;\r\n    top: -15px;\r\n}\r\n\r\n.item-price {\r\n    color: white;\r\n    font-size: 40px;\r\n    position: relative;\r\n    top: -47px;\r\n}\r\n\r\n.product-photo {\r\n    position: relative;\r\n    top: -50px;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- static/css/main_page_dark.css	(revision 83b1d5033825ed039e1da1ab8189a26cc7e6cbf5)
++++ static/css/main_page_dark.css	(date 1588847860430)
+@@ -1,13 +1,13 @@
+ .product-item {
+     display: inline-block;
+-	border: 1px solid white;
++	border: 2px solid #f5f5f5;
+ 	border-radius: 8px;
++	margin: 5px;
+ 	position: relative;
+ 	right: 0px;
+ 	background-color: #282828;
+-	margin: 5px;
+ 	text-decoration: none;
+-	height: 400px;
++	height: 410px;
+ 	width: 250px;
+ 	text-align: center;
+ }
+@@ -21,27 +21,50 @@
+ }
+ 
+ .item-name {
+-    color: white;
++    display: flex;
++    align-items: center;
++    justify-content: center;
+     font-size: 30px;
++    height: 60px;
+     position: relative;
+-    top: 5px;
++    top: 0px;
++    line-height: 1
+ }
+ 
+ .item-musician {
+-    color: white;
+     font-size: 25px;
+-    position: relative;
+-    top: -15px;
++    width: 100%;
++    position: absolute;
++    top: 60px
++
+ }
+ 
+ .item-price {
+-    color: white;
++    color: #f5f5f5;
+     font-size: 40px;
++    width: 100%;
++    position: absolute;
++    top: 90px;
++}
++
++.product-photo {
+     position: relative;
+-    top: -47px;
++    top: -200px;
++}
++
++a:hover {
++    text-decoration: none;
++    color: #f5f5f5;
++}
++
++a {
++    color: #f5f5f5
+ }
+ 
+-.product-photo {
++.item-text {
++    width: 250px;
++    height: 205px;
+     position: relative;
+-    top: -50px;
+-}
++    top: 250px;
++    left: -2px
++}
+\ No newline at end of file
+Index: static/css/cart_dark.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- static/css/cart_dark.css	(date 1588847633030)
++++ static/css/cart_dark.css	(date 1588847633030)
+@@ -0,0 +1,156 @@
++.all-cart-products {
++    position: relative;
++    top: 20px;
++}
++
++.cart-product-item {
++    background: #282828;
++    display: flex;
++    flex-direction: row;
++    width: 90%;
++    height: 150px;
++    border-radius: 8px;
++    border: 2px solid #f5f5f5;
++    margin-bottom: 20px;
++    position: relative;
++    left: 5%;
++    right: 5%;
++    top: -10px;
++}
++
++.word-cart {
++    font-size: 50px;
++    color: #f5f5f5;
++    text-align: center
++}
++
++.item-right-div {
++    display: flex;
++    flex-direction: column;
++    position: absolute;
++    right: 25px;
++    top: 10px;
++    width: 150px;
++    color: #f5f5f5
++}
++
++.cpc {
++    height: 40px;
++    display: flex;
++    flex-direction: row;
++    justify-content: space-between;
++    font-size: 25px
++}
++
++.cart-product-price {
++    font-size: 40px;
++    text-align: center
++}
++
++.cart-product-photo {
++    position: relative;
++    top: 8px;
++    left: 10px
++}
++
++.item-text-div {
++    position: absolute;
++    width: 100%;
++    height: 100%;
++    margin: 0 auto;
++    display: flex;
++    align-items: center;
++    flex-direction: column;
++    justify-content: center
++}
++
++.cart-product-item-name {
++    font-size: 30px;
++    text-align: center;
++    color: #f5f5f5
++
++}
++
++a:hover {
++    text-decoration: none;
++    color: #f5f5f5;
++}
++
++.cart-product-item-musician {
++    font-size: 25px;
++    text-align: center;
++    color: #f5f5f5
++
++}
++
++.cart-product-item-year {
++    font-size: 20px;
++    text-align: center;
++    color: #f5f5f5
++
++}
++
++.cpc-b+ {
++    position: absolute;
++    right: 0px
++}
++
++.cpc-b- {
++    position: absolute;
++    left: 0px
++}
++
++.cart-product-count {
++    text-align: center;
++    width: 80px;
++    font-size: 30px;
++    margin: 5px;
++    position: relative;
++    top: -8px;
++    left: 27px
++}
++
++.order-div {
++    margin: 0 auto;
++    align: center;
++    background: #282828;
++    width: 40%;
++    height: 150px;
++    border-radius: 8px;
++    border: 2px solid #f5f5f5;
++}
++
++.text-order-div {
++    position: relative;
++    left: 5px;
++    font-size: 30px;
++    display: flex;
++    flex-direction: column;
++    color: #f5f5f5
++}
++
++.order-words {
++    font-size: 30px;
++    color: #f5f5f5;
++    text-align: center;
++    margin-bottom: -20px
++}
++
++.order-btn {
++    width: 180px;
++    height: 70px;
++    position: relative;
++    right: -30px;
++    top: 30px;
++    font-size: 35px
++}
++
++.text_btn {
++    display: flex;
++    flex-direction: row;
++}
++
++.sum-price {
++    position: relative;
++    bottom: -20px
++}
+\ No newline at end of file

@@ -6,6 +6,27 @@
     <link rel="stylesheet" type="text/css" href="../static/css/main_page_light.css">
 {% endif %}
 <ul class="all-products">
+    {% if special %}
+        {% if current_user.is_authenticated and current_user.circle_theme %}
+            <div class="special" style="border-radius: 8px">
+        {% else %}
+            <div class="special" style="border-radius: 0px">
+        {% endif%}
+            <a href="/product/{{ special.id }}">
+                <img class="special-photo" src="{{ special.photo }}" height="480" width="480" alt="No photo now">
+            </a>
+            <div class="special-text">
+                <p class="special-special">50ht Anniversary</p>
+                 <p class="special-name">
+                    <a href="/product/{{ special.id }}">{{ special.name }}</a>
+                </p>
+                <p class="special-musician">
+                    <a href="/musician/{{ special.musician.name }}">by {{ special.musician.name }}</a>
+                </p>
+                <p class="special-price">Only for ${{ special.price }}</p>
+            </div>
+        </div>
+    {% endif %}
     {% for item in products %}
     {% if current_user.is_authenticated and current_user.circle_theme %}
         <li class="product-item" style="border-radius: 8px">
