@@ -3,7 +3,7 @@ Werkzeug==1.0.1
 WTForms==2.2.1
 Flask==1.1.2
 Flask-Login==0.5.0
-Flask-RESTfu==0.3.8
+Flask-RESTful==0.3.8
 Flask-WTF==0.14.3
 Jinja==2.11.2
 Mako==1.1.2
