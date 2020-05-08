@@ -279,9 +279,25 @@ def main():
             order.promo = form.promo.data
             order_session.add(order)
             order_session.commit()
-            return redirect("/")
+            return redirect("/thanks")
         return render_template("order.html", form=form, cart_id=id,
                                full_price=full_price, delivery_price=delivery_price, delivery=delivery)
+
+    @app.route('/review_delete/<int:id>', methods=['GET', 'POST'])
+    @login_required
+    def review_delete(id):
+        session = db_session.create_session()
+        review = session.query(Review).filter(Review.id == id, Review.user == current_user).first()
+        if review:
+            session.delete(review)
+            session.commit()
+        else:
+            abort(404)
+        return redirect('/')
+
+    @app.route('/thanks')
+    def thanks():
+        return render_template("thanks.html")
 
 
     app.run()
