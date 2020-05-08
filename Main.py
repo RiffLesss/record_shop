@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, make_response, session, redirect, abort
+from flask_restful import reqparse, abort, Api, Resource
+from data.product_resourses import ProductResource, ProductListResource
 from data import db_session
 from data.users import User
 from data.RegisterForm import RegisterForm
@@ -14,6 +16,7 @@ from data.reviews import Review
 from data.orders import Order
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from sqlalchemy import func
+import product_api
 import datetime
 
 
@@ -21,13 +24,17 @@ app = Flask(__name__)
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
+api = Api(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
 
 def main():
     db_session.global_init("db/shop.db")
-    #app.run()
+    api.add_resource(ProductListResource, '/api/products')
+    api.add_resource(ProductResource, '/api/product/<int:product_id>')
+    app.register_blueprint(product_api.blueprint)
     session = db_session.create_session()
 
     @app.route("/")
