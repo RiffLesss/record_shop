@@ -9,9 +9,10 @@
 {% endif %}
 <div class="order_div">
     <p class="title_text">Order registration</p>
+
     <form action="" method="post">
         {{ form.hidden_tag() }}
-            {{ form.csrf_token }}
+        {{ form.csrf_token }}
         {% if current_user.is_authenticated and current_user.circle_theme %}
             <div class="details_div" style="border-radius: 50px">
         {% else %}
@@ -47,7 +48,51 @@
             </p>
         </div>
         <p class="delivery_text">Please, choose a delivery method</p>
+        <div class="choose-delivery-provider-div">
+             <a class="delivery-provider-div-1" href="/order/sdek">
+                <img class="special-photo" src="../static/img/sdek.jpg" height="100" width="180" alt="No photo now">
+            </a>
+            <a class="delivery-provider-div-2" href="/order/boxberry">
+                <img class="special-photo" src="../static/img/boxberry.jpg" height="100" width="180" alt="No photo now">
+            </a>
+            <a class="delivery-provider-div-3" href="/order/home">
+                <img class="special-photo" src="../static/img/home.jpeg" height="100" width="180" alt="No photo now">
+            </a>
+        </div>
         <div class="delivery_div">
+            {% if delivery == "sdek" %}
+                {% if current_user.is_authenticated and current_user.circle_theme %}
+                    <div class="pick-up_delivery_div" style="border-radius: 50px">
+                {% else %}
+                    <div class="pick-up_delivery_div" style="border-radius: 0px">
+                {% endif %}
+                    <p class="pick-up_delivery_text">Select the pick-up point</p>
+                    <div class="pick-up_provider_div">
+                        <p class="pick-up_provider_text">СДЭК</p>
+                        <p class="pick-up_provider_text">Delivery time: 5-7 days</p>
+                        <p class="pick-up_provider_text">Price: $5.99</p>
+                    </div>
+                    <p class="map">
+                        <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A753a6d03bb7937c89c7ca5d47c8e9a717f4db686be31de42bc9c57c13fc9d3be&amp;width=1080&amp;height=525&amp;lang=ru_RU&amp;scroll=true"></script>
+                    </p>
+                </div>
+            {% elif delivery == "boxberry" %}
+                {% if current_user.is_authenticated and current_user.circle_theme %}
+                    <div class="pick-up_delivery_div" style="border-radius: 50px">
+                {% else %}
+                    <div class="pick-up_delivery_div" style="border-radius: 0px">
+                {% endif %}
+                    <p class="pick-up_delivery_text">Select the pick-up point</p>
+                    <div class="pick-up_provider_div">
+                        <p class="pick-up_provider_text">Boxberry</p>
+                        <p class="pick-up_provider_text">Delivery time: 7-10 days</p>
+                        <p class="pick-up_provider_text">Price: $4.99</p>
+                    </div>
+                    <p class="map">
+                        <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Afa240139cbc91206ef10e6dcec48da971bfe9446288f74c22782320c4cbc4ab7&amp;width=1080&amp;height=525&amp;lang=ru_RU&amp;scroll=true"></script>
+                    </p>
+                </div>
+            {% endif %}
             <div class="delivery_form_div">
                 {% if current_user.is_authenticated and current_user.circle_theme %}
                     <div class="home_delivery_div" style="border-radius: 50px">
@@ -55,7 +100,6 @@
                     <div class="home_delivery_div" style="border-radius: 0px">
                 {% endif %}
                     <p class="home_delivery_text">Please, enter the delivery address</p>
-                    <p class="form_address_text">{{ form.home_delivery() }} {{ form.home_delivery.label }}</p>
                     <p class="form_address_text">
                         {{ form.country.label }}<br>
                         {{ form.country(class="form-control") }}<br>
@@ -101,58 +145,29 @@
                             </p>
                         {% endfor %}
                     </p>
-                </div>
-                {% if current_user.is_authenticated and current_user.circle_theme %}
-                    <div class="pay_div" style="border-radius: 50px">
-                {% else %}
-                    <div class="pay_div" style="border-radius: 0px">
-                {% endif %}
                     <p class="home_delivery_text">Place your order</p>
-                    <p class="form_address_text">
-                        {{ form.promo.label }}<br>
-                        {{ form.promo(class="form-control") }}<br>
-                        {% for error in form.promo.errors %}
-                            <p class="alert alert-danger" role="alert">
-                                {{ error }}
-                            </p>
-                        {% endfor %}
-                    </p>
-                    {% if current_user.dark_theme %}
-                        <p class="order_btn">{{ form.submit(type="submit", class="btn btn-outline-light my-2 my-sm-0 btn-lg") }}</p>
-                    {% else %}
-                        <p class="order_btn">{{ form.submit(type="submit", class="btn btn-outline-dark my-2 my-sm-0 btn-lg") }}</p>
-                    {% endif %}
+                        <div class="pay_div">
+                            <div class="promo-code-div">
+                                <p class="form_promo-code_text">
+                                    {{ form.promo.label }}<br>
+                                    {{ form.promo(class="form-control") }}<br>
+                                    {% for error in form.promo.errors %}
+                                        <p class="alert alert-danger" role="alert">
+                                            {{ error }}
+                                        </p>
+                                    {% endfor %}
+                                </p>
+                                {% if current_user.dark_theme %}
+                                    <p class="order_btn">{{ form.submit(type="submit", class="btn btn-outline-light my-2 my-sm-0 btn-lg") }}</p>
+                                {% else %}
+                                    <p class="order_btn">{{ form.submit(type="submit", class="btn btn-outline-dark my-2 my-sm-0 btn-lg") }}</p>
+                                {% endif %}
+                            </div>
+                            <p class="full_price">${{ full_price + delivery_price }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="map_div">
-                {% if current_user.is_authenticated and current_user.circle_theme %}
-                    <div class="pick-up_delivery_div" style="border-radius: 50px">
-                {% else %}
-                    <div class="pick-up_delivery_div" style="border-radius: 0px">
-                {% endif %}
-                    <p class="pick-up_delivery_text">Select the pick-up point</p>
-                    <p class="pick-up_provider_text">СДЭК</p>
-                    <p class="pick-up_provider_text">Delivery time: 5-7 days</p>
-                    <p class="pick-up_provider_text">Price: $4.99</p>
-                    <p class="map">
-                        <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A753a6d03bb7937c89c7ca5d47c8e9a717f4db686be31de42bc9c57c13fc9d3be&amp;width=525&amp;height=525&amp;lang=ru_RU&amp;scroll=true"></script>
-                    </p>
-                </div>
-                {% if current_user.is_authenticated and current_user.circle_theme %}
-                    <div class="pick-up_delivery_div" style="border-radius: 50px">
-                {% else %}
-                    <div class="pick-up_delivery_div" style="border-radius: 0px">
-                {% endif %}
-                    <p class="pick-up_delivery_text">Select the pick-up point</p>
-                    <p class="pick-up_provider_text">BOXBERRY</p>
-                    <p class="pick-up_provider_text">Delivery time: 7-10 days</p>
-                    <p class="pick-up_provider_text">Price: $4.99</p>
-                    <p class="map">
-                        <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Afa240139cbc91206ef10e6dcec48da971bfe9446288f74c22782320c4cbc4ab7&amp;width=525&amp;height=525&amp;lang=ru_RU&amp;scroll=true"></script>
-                    </p>
-                </div>
-            </div>
-        </div>
     </form>
 </div>
 {% endblock %}

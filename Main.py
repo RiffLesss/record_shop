@@ -243,10 +243,17 @@ def main():
             return render_template("product.html", product=product, form=form, reviews=reviews, songs=songs, songs_count=songs_count)
 
 
-    @app.route('/order/<int:id>', methods=['GET', 'POST'])
-    def order_page(id):
+    @app.route('/order/<delivery>', methods=['GET', 'POST'])
+    def order_page(delivery):
         cart = session.query(Cart).filter(Cart.id == current_user.id).first()
         id = cart.id
+        if delivery == 'home':
+            delivery_price = 9.99
+        elif delivery == 'sdek':
+            delivery_price = 5.99
+        elif delivery == 'boxberry':
+            delivery_price = 4.99
+        full_price = session.query(func.sum(Cart_Product.full_price)).filter_by(cart_id=id).scalar()
         form = OrderForm()
         if form.validate_on_submit():
             order_session = db_session.create_session()
@@ -255,17 +262,19 @@ def main():
             order.surname = form.surname.data
             order.name = form.name.data
             order.phone = form.phone.data
-            order.home_delivery = form.home_delivery.data
+            order.delivery = delivery
+            order.delivery_price = delivery_price
             order.country = form.country.data
             order.town = form.town.data
             order.street = form.street.data
             order.house = form.house.data
             order.flat = form.flat.data
             order.promo = form.promo.data
-            order_session.merge(current_user)
+            order_session.add(order)
             order_session.commit()
-            redirect("/")
-        return render_template("order.html", form=form)
+            return redirect("/")
+        return render_template("order.html", form=form, cart_id=id,
+                               full_price=full_price, delivery_price=delivery_price, delivery=delivery)
 
 
     app.run()

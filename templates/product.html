@@ -14,62 +14,36 @@
         <link rel="stylesheet" type="text/css" href="../static/css/single_light.css">
     {% endif %}
 {% endif %}
-{% if current_user.is_authenticated and current_user.circle_theme %}
-    <div class="product_div" style="border-radius: 8px">
-{% else %}
-    <div class="product_div" style="border-radius: 0px">
-{% endif %}
+<div class="product_div">
     <div class="img_div">
         <img src="{{ product.photo }}" height="500" width="500" alt="No photo now">
     </div>
     {% if product.is_lp == 1 %}
-         {% if current_user.is_authenticated and current_user.circle_theme %}
-            <div class="songs_div" style="border-radius: 8px">
-        {% else %}
-            <div class="songs_div" style="border-radius: 0px">
-        {% endif %}
-             {% if songs_count <= 12 %}
-                <ul class="songs_list">
-             {% else %}
-                <ul class="songs_list" style="line-height: 1">
-             {% endif %}
-                    {% for item in songs %}
-                        <li class="song_item">
-                            <p class="song_text">{{ item.name }}</p>
-                        </li>
-                    {% endfor %}
-                </ul>
+         <div class="songs_div">
+            <ul class="songs_list">
+                {% for item in songs %}
+                    <li class="song_item">
+                        <p class="song_text">{{ item.name }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
     {% endif %}
-    {% if current_user.is_authenticated and current_user.circle_theme %}
-        <div class="info_div" style="border-radius: 8px">
-    {% else %}
-        <div class="info_div" style="border-radius: 0px">
-    {% endif %}
+    <div class="info_div">
         <p class="name_text">{{ product.name }}</p>
         <p class="musician_text">{{ product.musician.name }}</p>
         <p class="year_text">{{ product.year }}</p>
     </div>
-    {% if current_user.is_authenticated and current_user.circle_theme %}
-        <div class="price_div" style="border-radius: 8px">
-    {% else %}
-        <div class="price_div" style="border-radius: 0px">
-    {% endif %}
+    <div class="price_div">
         <p class="price_text">${{ product.price }}</p>
         {% if current_user.dark_theme %}
             {% if current_user.is_authenticated %}
                 <div class="add_button_div">
                     <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/add_to_cart/{{ product.id }}" role="button">Add to cart</a>
                 </div>
-                <div class="buy_button_div">
-                    <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/login" role="button">Buy now</a>
-                </div>
             {% else %}
                 <div class="add_button_div">
                     <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/login" role="button">Add to cart</a>
-                </div>
-                <div class="buy_button_div">
-                    <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/login" role="button">Buy now</a>
                 </div>
             {% endif %}
         {% else %}
@@ -77,34 +51,20 @@
                 <div class="add_button_div">
                     <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/add_to_cart/{{ product.id }}" role="button">Add to cart</a>
                 </div>
-                <div class="buy_button_div">
-                    <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/login" role="button">Buy now</a>
-                </div>
             {% else %}
                 <div class="add_button_div">
                     <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/login" role="button">Add to cart</a>
                 </div>
-                <div class="buy_button_div">
-                    <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/login" role="button">Buy now</a>
-                </div>
             {% endif %}
         {% endif %}
     </div>
-    {% if current_user.is_authenticated and current_user.circle_theme %}
-        <div class="description_div" style="border-radius: 8px">
-    {% else %}
-        <div class="description_div" style="border-radius: 0px">
-    {% endif %}
+    <div class="description_div">
         <p class="description_text">{{ product.description }}</p>
     </div>
-    {% if current_user.is_authenticated and current_user.circle_theme %}
-        <div class="add_review_div" style="border-radius: 8px">
-    {% else %}
-        <div class="add_review_div" style="border-radius: 0px">
-    {% endif %}
+    <div class="add_review_div">
         {% if current_user.is_authenticated %}
             <p class="add_review_title_text">Write a review</p>
-            <form action="" method="post">
+            <form action="" method="post" class="review_form">
                 {{ form.hidden_tag() }}
                 {{ form.csrf_token }}
                 <p>
@@ -129,20 +89,31 @@
     </div>
     <div class="all_reviews_div">
         {% for item in reviews %}
-            {% if current_user.is_authenticated and current_user.circle_theme %}
-                <div class="review_div" style="border-radius: 8px">
-            {% else %}
-                <div class="review_div" style="border-radius: 0px">
-            {% endif %}
+            <div class="review_div">
                 <div class="review_img_div">
                     <img class="review_img" src="../static/img/rockwood.jpg" width="120" height="120" alt="No photo now">
                 </div>
                 <div class="review_user_div">
-                    <p class="review_user_text">{{ item.user.surname }} {{ item.user.name }}</p>
-                    <p class="review_created_date_text">{{ item.created_date }}</p>
+                    <div class="review_user_name_div">
+                        <p class="review_user_text">{{ item.user.surname }} {{ item.user.name }}</p>
+                    </div>
+                    <div class="created_date_div">
+                        <p class="review_created_date_text">{{ item.created_date }}</p>
+                    </div>
                 </div>
                 <div class="review_content_div">
-                    <p class="review_content_text">{{ item.content }}</p>
+                    <div class="review_delete_div">
+                        {% if current_user.is_authenticated and current_user == item.user %}
+                            {% if current_user.dark_theme %}
+                                <a class="btn btn-outline-light my-2 my-sm-0 btn-lg" href="/review_delete/{{ item.id }}" role="button">Delete</a>
+                            {% else %}
+                                <a class="btn btn-outline-dark my-2 my-sm-0 btn-lg" href="/review_delete/{{ item.id }}" role="button">Delete</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="review_content_text_div">
+                        <p class="review_content_text">{{ item.content }}</p>
+                    </div>
                 </div>
             </div>
         {% endfor %}

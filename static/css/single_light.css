@@ -42,13 +42,7 @@ background-color: #f5f5f5;
 .add_button_div {
 float: left;
 position: relative;
-left: 25px;
-}
-
-.buy_button_div {
-float: left;
-position: relative;
-left: 30px;
+left: 82px;
 }
 
 .add_review_div {
@@ -134,7 +128,7 @@ margin-right: 30px;
 font-size: 40px;
 }
 
-form {
+.review_form {
 margin-left: 30px;
 margin-right: 30px;
 margin-top: -20px;

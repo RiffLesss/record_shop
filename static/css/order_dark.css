@@ -10,23 +10,8 @@ border-radius: 50px;
 border:4px solid #f5f5f5;
 }
 
-.delivery_div {
-display: flex;
-}
-
 .home_delivery_div {
-width: 565px;
-height: 48%;
-background: #282828;
-position: relative;
-top: 50px;
-margin-bottom: 30px;
-border-radius: 50px;
-border:4px solid #f5f5f5;
-}
-
-.pay_div {
-width: 565px;
+width: 100%;
 background: #282828;
 position: relative;
 top: 50px;
@@ -36,11 +21,10 @@ border:4px solid #f5f5f5;
 }
 
 .pick-up_delivery_div {
-width: 565px;
+width: 100%;
 background: #282828;
 position: relative;
 top: 50px;
-left: 30px;
 margin-bottom: 30px;
 border-radius: 50px;
 border:4px solid #f5f5f5;
@@ -82,8 +66,8 @@ text-align: center;
 
 .form_address_text {
 color: #f5f5f5;
-width: 80%;
-margin-left: 60px;
+width: 90%;
+margin-left: 5%;
 }
 
 .pick-up_delivery_text {
@@ -94,15 +78,72 @@ text-align: center;
 
 .pick-up_provider_text {
 color: #f5f5f5;
+width: 33%;
 font-size: 20px;
 margin-left: 10px;
+text-align: center;
+justify-content: space-between
+}
 }
 
 .order_btn {
-margin-left: 60px;
-margin-bottom: 50px;
+margin: 0 auto
 }
 
 .map {
 margin-left: 10px;
+}
+
+.pick-up_provider_div {
+    display: flex;
+    flex-direction: row
+}
+
+.choose-delivery-provider-div {
+    height: 104px;
+    width: 550px;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto
+}
+
+.delivery-provider-div-1{
+    padding-right: 5px
+}
+
+.delivery-provider-div-2{
+    padding-right: 5px
+}
+
+.form_radio_div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around
+}
+
+.form_promo-code_text {
+    color: #f5f5f5;
+}
+
+.promo-code-div {
+    width: 45%;
+    margin-left: 5%;
+}
+
+.full_price {
+    font-size: 120px;
+    color: #f5f5f5;
+    width: 45%;
+    text-align: center;
+    margin-right: 5%;
+}
+
+.pay_div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.radio {
+    color: #f5f5f5
 }
