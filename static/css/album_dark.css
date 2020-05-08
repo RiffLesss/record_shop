@@ -127,7 +127,7 @@ font-size: 40px;
 .musician_text {
 text-align: center;
 position: relative;
-top: 20px;
+top: 10px;
 color: #f5f5f5;
 font-size: 30px;
 }
@@ -135,8 +135,9 @@ font-size: 30px;
 .year_text {
 text-align: center;
 color: #f5f5f5;
-font-size: 20px;
-margin-top: 60px;
+position: relative;
+top: 10px;
+font-size: 40px;
 }
 
 .price_text {
@@ -194,4 +195,13 @@ text-align: right;
 color: #f5f5f5;
 margin-top: 30px;
 margin-right: 30px;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #f5f5f5;
+}
+
+.song_text {
+    color: #f5f5f5
 }

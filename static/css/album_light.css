@@ -1,7 +1,6 @@
 .product_div {
 width: 125%;
 margin-top: 100px;
-margin-right: 50px;
 }
 
 .img_div {
@@ -9,8 +8,6 @@ float: left;
 width: 500px;
 height: 500px;
 margin-right: 30px;
-position: relative;
-right: 50px
 }
 
 .songs_div {
@@ -21,8 +18,6 @@ margin-right: 30px;
 border:1px solid #464544;
 border-radius: 8px;
 background-color: #f5f5f5;
-position: relative;
-right: 50px
 }
 
 .info_div {
@@ -30,8 +25,6 @@ float: left;
 width: 300px;
 height: 235px;
 margin-right: 30px;
-position: relative;
-right: 50px;
 margin-bottom: 30px;
 border:1px solid #464544;
 border-radius: 8px;
@@ -45,8 +38,6 @@ height: 235px;
 border:1px solid #464544;
 border-radius: 8px;
 background-color: #f5f5f5;
-position: relative;
-right: 50px;
 }
 
 .description_div {
@@ -56,8 +47,6 @@ margin-top: 30px;
 border:1px solid #464544;
 border-radius: 8px;
 background-color: #f5f5f5;
-position: relative;
-right: 50px;
 }
 
 .add_button_div {
@@ -66,6 +55,7 @@ position: relative;
 left: 82px;
 }
 
+
 .add_review_div {
 float: left;
 width: 1160px;
@@ -73,16 +63,12 @@ margin-top: 30px;
 border:1px solid #464544;
 border-radius: 8px;
 background-color: #f5f5f5;
-position: relative;
-right: 50px;
 }
 
 .all_reviews_div {
 float: left;
 width: 1160px;
 margin-top: 30px;
-position: relative;
-right: 50px;
 }
 
 .review_div {
@@ -91,31 +77,44 @@ border:1px solid #464544;
 border-radius: 8px;
 background-color: #f5f5f5;
 margin-bottom: 30px;
-position: relative;
-right: 50px;
 }
 
 .review_img_div {
 float: left;
 width: 150px;
 height: 135px;
-position: relative;
-right: 50px;
 }
 
 .review_user_div {
 float: left;
+display: flex;
 width: 1000px;
 height: 135px;
-position: relative;
-right: 50px;
+}
+
+.review_user_name_div {
+width: 460px;
+}
+
+.created_date_div {
+width: 460px;
+margin-left: 30px;
 }
 
 .review_content_div {
 width: 1160px;
-margin-top: 135px;
-position: relative;
-right: 50px;
+margin-top: 150px;
+display: flex;
+}
+
+.review_delete_div {
+width: 150px;
+height: 30px;
+margin-left: 30px;
+}
+
+.review_content_text_div {
+width: 980px;
 }
 
 .name_text {
@@ -129,7 +128,7 @@ font-size: 40px;
 .musician_text {
 text-align: center;
 position: relative;
-top: 20px;
+top: 10px;
 color: #464544;
 font-size: 30px;
 }
@@ -137,8 +136,9 @@ font-size: 30px;
 .year_text {
 text-align: center;
 color: #464544;
-font-size: 20px;
-margin-top: 60px;
+position: relative;
+top: 10px;
+font-size: 40px;
 }
 
 .price_text {
@@ -181,7 +181,7 @@ margin-left: 30px;
 
 .review_user_text {
 color: #464544;
-font-size: 40px;
+font-size: 60px;
 margin-left: 30px;
 }
 
@@ -189,11 +189,20 @@ margin-left: 30px;
 color: #464544;
 margin-top: 30px;
 margin-left: 30px;
+text-align: right;
 }
 
 .review_content_text {
 color: #464544;
 margin-top: 30px;
-margin-left: 180px;
 margin-right: 30px;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #464544;
+}
+
+.song_text {
+    color: #464544
 }

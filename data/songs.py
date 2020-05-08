@@ -9,5 +9,6 @@ class Song(SqlAlchemyBase, SerializerMixin):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     album_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("products.id"))
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    single_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
 
     product = orm.relation('Product')
