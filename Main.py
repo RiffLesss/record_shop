@@ -134,8 +134,10 @@ def main():
         cart = session.query(Cart).get(current_user.id)
         cart_products = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id)
         product_count = session.query(func.sum(Cart_Product.count)).filter_by(cart_id=cart.id).scalar()
-        full_price = session.query(func.sum(Cart_Product.full_price)).filter_by(cart_id=cart.id).scalar()
-        full_price = round(full_price, 2)
+        sum_price = session.query(func.sum(Cart_Product.full_price)).filter_by(cart_id=cart.id).scalar()
+        sum_price = str(sum_price)
+        full_price = sum_price[:(sum_price.find('.') + 3)]
+        print(full_price, sum_price.find('.'))
         current_user_id = current_user.id
         if cart_products.count() == 0:
             empty_cart = True
