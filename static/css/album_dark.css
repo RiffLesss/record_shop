@@ -117,6 +117,7 @@ width: 980px;
 }
 
 .name_text {
+line-height: 0.9em;
 text-align: center;
 position: relative;
 top: 10px;
@@ -138,6 +139,7 @@ color: #f5f5f5;
 position: relative;
 top: 10px;
 font-size: 40px;
+margin-top: -10px;
 }
 
 .price_text {

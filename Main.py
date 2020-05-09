@@ -229,7 +229,6 @@ def main():
             session.commit()
         return redirect("/cart")
 
-
     @app.route('/product/<int:id>', methods=['GET', 'POST'])
     def product_page(id):
         session.query(Product).filter(Product.id == id).update({Product.views: Product.views + 1})
@@ -251,7 +250,6 @@ def main():
             songs = session.query(Song).filter(Song.album_id == product.id)
             songs_count = songs.count()
             return render_template("product.html", product=product, form=form, reviews=reviews, songs=songs, songs_count=songs_count)
-
 
     @app.route('/order/<delivery>', methods=['GET', 'POST'])
     def order_page(delivery):
