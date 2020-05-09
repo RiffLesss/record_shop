@@ -118,12 +118,16 @@ width: 980px;
 }
 
 .name_text {
+display: flex;
+   align-items: center;
+   justify-content: center;
 line-height: 0.9em;
 text-align: center;
 position: relative;
 top: 10px;
 color: #464544;
 font-size: 40px;
+height: 90px;
 }
 
 .musician_text {

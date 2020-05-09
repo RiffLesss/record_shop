@@ -2,13 +2,13 @@
 
 {% block content %}
 {% if product.is_lp == 1 %}
-    {% if current_user.dark_theme %}
+    {% if current_user.is_authenticated and current_user.dark_theme %}
         <link rel="stylesheet" type="text/css" href="../static/css/album_dark.css">
     {% else %}
         <link rel="stylesheet" type="text/css" href="../static/css/album_light.css">
     {% endif %}
 {% else %}
-    {% if current_user.dark_theme %}
+    {% if current_user.is_authenticated and current_user.dark_theme %}
         <link rel="stylesheet" type="text/css" href="../static/css/single_dark.css">
     {% else %}
         <link rel="stylesheet" type="text/css" href="../static/css/single_light.css">
@@ -19,7 +19,11 @@
         <img src="{{ product.photo }}" height="500" width="500" alt="No photo now">
     </div>
     {% if product.is_lp == 1 %}
-        <div class="songs_div">
+        {% if current_user.is_authenticated and current_user.circle_theme %}
+            <div class="songs_div" style="border-radius: 8px">
+        {% else %}
+            <div class="songs_div" style="border-radius: 0px">
+        {% endif%}
             {% if songs_count <=12 %}
                 <ul class="songs_list">
             {% else %}
@@ -38,12 +42,20 @@
             </ul>
         </div>
     {% endif %}
-    <div class="info_div">
+    {% if current_user.is_authenticated and current_user.circle_theme %}
+            <div class="info_div" style="border-radius: 8px">
+        {% else %}
+            <div class="info_div" style="border-radius: 0px">
+        {% endif%}
         <p class="name_text">{{ product.name }}</p>
-        <a href="/musician/{{ product.musician.name }}"><p class="musician_text" >{{ product.musician.name }}</p></a>
-        <a href="/year/{{ product.year }}"><p class="year_text">{{ product.year }}</p></a>
+        <a href="/musician/{{ product.musician.name }}" style="text-decoration: none"><p class="musician_text" >{{ product.musician.name }}</p></a>
+        <a href="/year/{{ product.year }}" style="text-decoration: none"><p class="year_text">{{ product.year }}</p></a>
     </div>
-    <div class="price_div">
+    {% if current_user.is_authenticated and current_user.circle_theme %}
+            <div class="price_div" style="border-radius: 8px">
+        {% else %}
+            <div class="price_div" style="border-radius: 0px">
+        {% endif%}
         <p class="price_text">${{ product.price }}</p>
         {% if current_user.dark_theme %}
             {% if current_user.is_authenticated %}
@@ -67,10 +79,18 @@
             {% endif %}
         {% endif %}
     </div>
-    <div class="description_div">
+    {% if current_user.is_authenticated and current_user.circle_theme %}
+            <div class="description_div" style="border-radius: 8px">
+        {% else %}
+            <div class="description_div" style="border-radius: 0px">
+        {% endif%}
         <p class="description_text">{{ product.description }}</p>
     </div>
-    <div class="add_review_div">
+    {% if current_user.is_authenticated and current_user.circle_theme %}
+            <div class="add_review_div" style="border-radius: 8px">
+        {% else %}
+            <div class="add_review_div" style="border-radius: 0px">
+        {% endif%}
         {% if current_user.is_authenticated %}
             <p class="add_review_title_text">Write a review</p>
             <form action="" method="post" class="review_form">
@@ -98,7 +118,11 @@
     </div>
     <div class="all_reviews_div">
         {% for item in reviews %}
-            <div class="review_div">
+            {% if current_user.is_authenticated and current_user.circle_theme %}
+                <div class="review_div" style="border-radius: 8px">
+            {% else %}
+                <div class="review_div" style="border-radius: 0px">
+            {% endif%}
                 <div class="review_img_div">
                     <img class="review_img" src="../static/img/rockwood.jpg" width="120" height="120" alt="No photo now">
                 </div>

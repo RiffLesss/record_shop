@@ -19,8 +19,10 @@
             crossorigin="anonymous"></script>
     {% if current_user.is_authenticated and current_user.dark_theme %}
         <link rel="stylesheet" type="text/css" href="../static/css/base_dark.css">
+        <script src="../static/scripts/search_dark.js"></script>
     {% else %}
         <link rel="stylesheet" type="text/css" href="../static/css/base_light.css">
+        <script src="../static/scripts/search_light.js"></script>
     {% endif %}
     <title>Rockwood</title>
 </head>
@@ -51,8 +53,9 @@
                 <ul class="navbar-nav ml-auto ddsl">
                     <li>
                         <form class="form-inline my-2 my-lg-0 right" id="search">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                            <a class="btn btn-outline-secondary my-2 my-sm-0" href="" type="submit">Search</a>
+                            <input class="place_for_search form-control mr-sm-2" type="text" id="text-to-find" value="" placeholder="Search" autofocus>
+                            <input class="button_for_turn_back btn btn-outline-secondary my-2 my-sm-0" style="margin-right: 5px" type="button" onclick="javascript: FindOnPage('text-to-find',false); return false;" value="x" title="End search">
+                            <input class="button_for_search btn btn-outline-secondary my-2 my-sm-0" type="submit" onclick="javascript: FindOnPage('text-to-find',true); return false;" value="Search" title="Start search">
                         </form>
                     </li>
                     <li>
