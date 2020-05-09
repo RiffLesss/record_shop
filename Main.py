@@ -135,6 +135,7 @@ def main():
         cart_products = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id)
         product_count = session.query(func.sum(Cart_Product.count)).filter_by(cart_id=cart.id).scalar()
         full_price = session.query(func.sum(Cart_Product.full_price)).filter_by(cart_id=cart.id).scalar()
+        full_price = round(full_price, 2)
         current_user_id = current_user.id
         if cart_products.count() == 0:
             empty_cart = True
@@ -231,6 +232,8 @@ def main():
 
     @app.route('/product/<int:id>', methods=['GET', 'POST'])
     def product_page(id):
+        session.query(Product).filter(Product.id == id).update({Product.views: Product.views + 1})
+        session.commit()
         form = ReviewsForm()
         product = session.query(Product).filter(Product.id == id).first()
         if form.validate_on_submit():

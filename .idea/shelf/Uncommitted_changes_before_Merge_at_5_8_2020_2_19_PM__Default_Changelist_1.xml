@@ -1,0 +1,9 @@
+<changelist name="Uncommitted_changes_before_Merge_at_5_8_2020_2_19_PM_[Default_Changelist]1" date="1588936769390" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_5_8_2020_2_19_PM_[Default_Changelist]1/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Merge at 5/8/2020 2:19 PM [Default Changelist]" />
+  <binary>
+    <option name="BEFORE_PATH" value="db/shop.db" />
+    <option name="AFTER_PATH" value="db/shop.db" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_5_8_2020_2_19_PM_[Default_Changelist]1/shop.db" />
+  </binary>
+</changelist>

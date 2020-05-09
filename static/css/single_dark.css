@@ -115,6 +115,7 @@ font-size: 40px;
 }
 
 .musician_text {
+text-decoration: none;
 text-align: center;
 position: relative;
 top: 10px;
@@ -123,6 +124,7 @@ font-size: 30px;
 }
 
 .year_text {
+text-decoration: none;
 text-align: center;
 color: #f5f5f5;
 font-size: 40px;

@@ -1,0 +1,19 @@
+Index: .idea/record_shop.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"PYTHON_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\">\r\n    <content url=\"file://$MODULE_DIR$\" />\r\n    <orderEntry type=\"jdk\" jdkName=\"Python 3.8 (be_abyss)\" jdkType=\"Python SDK\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/record_shop.iml	(revision 73ed18cb84b1bb0f5a248051ba0dd2014533517e)
++++ .idea/record_shop.iml	(date 1588936753261)
+@@ -5,4 +5,8 @@
+     <orderEntry type="jdk" jdkName="Python 3.8 (be_abyss)" jdkType="Python SDK" />
+     <orderEntry type="sourceFolder" forTests="false" />
+   </component>
++  <component name="PackageRequirementsSettings">
++    <option name="versionSpecifier" value="Strong equality (==x.y.z)" />
++    <option name="modifyBaseFiles" value="true" />
++  </component>
+ </module>
+\ No newline at end of file
