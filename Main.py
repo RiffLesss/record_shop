@@ -104,16 +104,21 @@ def main():
     def add_to_cart(id):
         product = session.query(Product).get(id)
         cart = session.query(Cart).filter(Cart.user_id == current_user.id).first()
-        cart_product = Cart_Product(
-            product_id=product.id,
-            cart_id=cart.id,
-            count=1,
-            one_price=product.price,
-            full_price=product.price
-        )
-        session.add(cart_product)
-        session.commit()
-        address = '/product/' + str(id)
+        old_cart_product = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id, Cart_Product.product_id == product.id).first()
+        if not old_cart_product:
+            cart_product = Cart_Product(
+                product_id=product.id,
+                cart_id=cart.id,
+                count=1,
+                one_price=product.price,
+                full_price=product.price
+            )
+            session.add(cart_product)
+            session.commit()
+            address = '/product/' + str(id)
+
+        else:
+            address = '/cart'
         return redirect(address)
 
     @app.route('/delete/<int:id>', methods=['GET', 'POST'])
@@ -129,15 +134,15 @@ def main():
         return redirect('/cart')
 
     @app.route('/cart')
+    @login_required
     def cart():
         empty_cart = False
         cart = session.query(Cart).get(current_user.id)
-        cart_products = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id)
+        cart_products = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id).order_by(Cart_Product.id.desc())
         product_count = session.query(func.sum(Cart_Product.count)).filter_by(cart_id=cart.id).scalar()
         sum_price = session.query(func.sum(Cart_Product.full_price)).filter_by(cart_id=cart.id).scalar()
         sum_price = str(sum_price)
         full_price = sum_price[:(sum_price.find('.') + 3)]
-        print(full_price, sum_price.find('.'))
         current_user_id = current_user.id
         if cart_products.count() == 0:
             empty_cart = True
@@ -206,27 +211,31 @@ def main():
         return redirect("/")
 
     @app.route("/count+/<int:id>")
+    @login_required
     def plus_count(id):
-        session.query(Cart_Product).filter(Cart_Product.id == id).\
+        cart = session.query(Cart).filter(Cart.user_id == current_user.id).first()
+        session.query(Cart_Product).filter(Cart_Product.id == id, Cart_Product.cart_id == cart.id).\
             update({Cart_Product.count: Cart_Product.count + 1,
                     Cart_Product.full_price: Cart_Product.one_price * (Cart_Product.count + 1)})
         c_p = session.query(Cart_Product).filter(Cart_Product.id == id).first()
         full_price = round(c_p.full_price, 2)
-        session.query(Cart_Product).filter(Cart_Product.id == id). \
+        session.query(Cart_Product).filter(Cart_Product.id == id, Cart_Product.cart_id == cart.id). \
             update({Cart_Product.full_price: full_price})
         session.commit()
         return redirect("/cart")
 
     @app.route("/count-/<int:id>")
+    @login_required
     def minus_count(id):
+        cart = session.query(Cart).filter(Cart.user_id == current_user.id).first()
         count = session.query(Cart_Product).get(id)
         if count.count > 1:
-            session.query(Cart_Product).filter(Cart_Product.id == id). \
+            session.query(Cart_Product).filter(Cart_Product.id == id, Cart_Product.cart_id == cart.id). \
                 update({Cart_Product.count: Cart_Product.count - 1,
                         Cart_Product.full_price: Cart_Product.one_price * (Cart_Product.count - 1)})
             c_p = session.query(Cart_Product).filter(Cart_Product.id == id).first()
             full_price = round(c_p.full_price, 2)
-            session.query(Cart_Product).filter(Cart_Product.id == id). \
+            session.query(Cart_Product).filter(Cart_Product.id == id, Cart_Product.cart_id == cart.id). \
                 update({Cart_Product.full_price: full_price})
             session.commit()
         return redirect("/cart")
@@ -254,6 +263,7 @@ def main():
             return render_template("product.html", product=product, form=form, reviews=reviews, songs=songs, songs_count=songs_count)
 
     @app.route('/order/<delivery>', methods=['GET', 'POST'])
+    @login_required
     def order_page(delivery):
         cart = session.query(Cart).filter(Cart.id == current_user.id).first()
         id = cart.id
@@ -282,7 +292,7 @@ def main():
             order.promo = form.promo.data
             order_session.add(order)
             order_session.commit()
-            return redirect("/thanks")
+            return redirect("/all_delete")
         return render_template("order.html", form=form, cart_id=id,
                                full_price=full_price, delivery_price=delivery_price, delivery=delivery)
 
@@ -298,7 +308,18 @@ def main():
             abort(404)
         return redirect('/')
 
+    @app.route('/all_delete')
+    @login_required
+    def all_delete():
+        cart = session.query(Cart).filter(Cart.id == current_user.id).first()
+        cart_products = session.query(Cart_Product).filter(Cart_Product.cart_id == cart.id)
+        for product in cart_products:
+            session.delete(product)
+            session.commit()
+        return redirect('/thanks')
+
     @app.route('/thanks')
+    @login_required
     def thanks():
         return render_template("thanks.html")
 
