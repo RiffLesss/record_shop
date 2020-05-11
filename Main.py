@@ -18,17 +18,16 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from sqlalchemy import func
 import product_api
 import datetime
+from flask_ngrok import run_with_ngrok
 
 
 app = Flask(__name__)
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
-
 api = Api(app)
-
 login_manager = LoginManager()
 login_manager.init_app(app)
-
+run_with_ngrok(app)
 
 def main():
     db_session.global_init("db/shop.db")
